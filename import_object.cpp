@@ -16,11 +16,11 @@ BasicShape ImportOBJ::loadFiles(std::string baseName, VAOStruct vao) {
     this->reset();
     std::string matName = baseName + ".mtl";
     std::string objName = baseName + ".obj";
-    std::cout << "file names" << std::endl;
+    //std::cout << "file names" << std::endl;
     this->readMTLFile(matName);
-    std::cout << "read mtl file" << std::endl;
+    //std::cout << "read mtl file" << std::endl;
     this->readOBJFile(objName);
-    std::cout << "read obj file" << std::endl;
+    //std::cout << "read obj file" << std::endl;
 
     return this->genShape(vao);
 }

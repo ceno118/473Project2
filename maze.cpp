@@ -22,6 +22,7 @@ void Maze::Draw(Shader* shader){
     glBindTexture(GL_TEXTURE_2D, walls_texture);
     shader -> setMat4("transform", glm::mat4(1.0f));
     walls.Draw();
+    //glBindTexture(GL_TEXTURE_2D, 0);
 
     shader -> setMat4("transform", glm::mat4(1.0));
     glm::mat4 floor_model = glm::mat4(1.0);
@@ -33,6 +34,8 @@ void Maze::Draw(Shader* shader){
     glBindTexture(GL_TEXTURE_2D, floor_texture);
     shader -> setMat4("transform", glm::mat4(1.0f));
     floor.Draw();
+    //glBindTexture(GL_TEXTURE_2D, 0);
+
 
     shader -> setMat4("transform", glm::mat4(1.0));
     glm::mat4 targets_model = glm::mat4(1.0);
@@ -44,5 +47,7 @@ void Maze::Draw(Shader* shader){
     glBindTexture(GL_TEXTURE_2D, target_texture);
     shader -> setMat4("transform", glm::mat4(1.0f));
     targets.Draw();
+    //glBindTexture(GL_TEXTURE_2D, 0);
+
 }
     

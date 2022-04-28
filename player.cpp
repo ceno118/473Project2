@@ -25,6 +25,7 @@ void Player::Move(){
 
 void Player::Draw(Shader* shader){
     shader->use();
+    shader->setBool("use_texture", false);
     shader->setMat4("transform", glm::mat4(1.0));
     glm::mat4 player_model = glm::mat4(1.0);
 
