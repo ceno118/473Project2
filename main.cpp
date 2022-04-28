@@ -106,7 +106,11 @@ int main () {
     //Create an import object to import different blender-generated shapes
     
     ImportOBJ importer;
-    BasicShape maze = importer.loadFiles("./models/finalmaze",import_vao);
+
+    // BasicShape floor = importer.loadFiles()
+
+
+    BasicShape maze = importer.loadFiles("./models/floor",import_vao);
     BasicShape* mazepointer = &maze;
     Player player(importer.loadFiles("./models/low_poly", import_vao));
     Player* player_pointer = &player;
