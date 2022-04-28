@@ -106,7 +106,7 @@ int main () {
     //Create an import object to import different blender-generated shapes
     
     ImportOBJ importer;
-    BasicShape maze = importer.loadFiles("./models/maze",import_vao);
+    BasicShape maze = importer.loadFiles("./models/finalmaze",import_vao);
     BasicShape* mazepointer = &maze;
     Player player(importer.loadFiles("./models/low_poly", import_vao));
     Player* player_pointer = &player;
@@ -225,11 +225,11 @@ int main () {
         glm::mat4 maze_model = glm::mat4(1.0);
         maze_model = glm::rotate(maze_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
         maze_model = glm::translate(maze_model, glm::vec3(0.0));
-        maze_model = glm::scale(maze_model, glm::vec3(5.0));
+        maze_model = glm::scale(maze_model, glm::vec3(1.5));
         import_shader.setMat4("model", maze_model);
         import_shader.setBool("use_texture", true);
         texture_shader.setMat4("transform", glm::mat4(1.0f));
-        glBindTexture(GL_TEXTURE_2D, floor_texture);
+        //glBindTexture(GL_TEXTURE_2D, floor_texture);
         maze.Draw();
         import_shader.setBool("use_texture", false);
         
