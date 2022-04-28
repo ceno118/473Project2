@@ -114,12 +114,12 @@ int main () {
     std::cout << "here2" << std::endl;
     BasicShape walls = importer.loadFiles("./models/walls", import_vao);
     std::cout << "floor and walls ok" << std::endl;
-    BasicShape targets = importer.loadFiles("./models/targets", import_vao);
+    BasicShape targets = importer.loadFiles("./models/target2", import_vao);
     std::cout << "targets" << std::endl;
 
     unsigned int wall_tex = GetTexture("./images/plywood.jpg");
     unsigned int floor_tex = GetTexture("./images/concrete.jpg");
-    unsigned int target_tex = GetTexture("./images/concrete.jpg");
+    unsigned int target_tex = GetTexture("./images/target5.png");
 
     //Maze maze(walls, floor, targets, wall_tex, floor_tex, target_tex);
     std::cout << "makes the maze" << std::endl;
@@ -254,7 +254,7 @@ int main () {
         import_shader.use();
         import_shader.setMat4("transform", glm::mat4(1.0));
         glm::mat4 targets_model = glm::mat4(1.0);
-        targets_model = glm::rotate(targets_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
+        targets_model = glm::rotate(targets_model,glm::radians(0.0f),glm::vec3(0.0,1.0,0.0));
         targets_model = glm::translate(targets_model, glm::vec3(0.0));
         targets_model = glm::scale(targets_model, glm::vec3(1.5));
         import_shader.setMat4("model", targets_model);
