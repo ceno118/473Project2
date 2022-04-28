@@ -110,16 +110,16 @@ int main () {
 
     // BasicShape floor = importer.loadFiles()
 
-    // BasicShape floor = importer.loadFiles("./models/floor", import_vao);
-    // std::cout << "here2" << std::endl;
-    // BasicShape walls = importer.loadFiles("./models/walls", import_vao);
-    // std::cout << "floor and walls ok" << std::endl;
+    BasicShape floor = importer.loadFiles("./models/floor", import_vao);
+    std::cout << "here2" << std::endl;
+    BasicShape walls = importer.loadFiles("./models/walls", import_vao);
+    std::cout << "floor and walls ok" << std::endl;
     BasicShape targets = importer.loadFiles("./models/targets", import_vao);
     std::cout << "targets" << std::endl;
 
     unsigned int wall_tex = GetTexture("./images/plywood.jpg");
     unsigned int floor_tex = GetTexture("./images/concrete.jpg");
-    unsigned int target_tex = GetTexture("./images/target.jpg");
+    unsigned int target_tex = GetTexture("./images/concrete.jpg");
 
     //Maze maze(walls, floor, targets, wall_tex, floor_tex, target_tex);
     std::cout << "makes the maze" << std::endl;
