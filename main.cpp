@@ -110,18 +110,18 @@ int main () {
 
     // BasicShape floor = importer.loadFiles()
 
-    BasicShape floor = importer.loadFiles("./models/floor", import_vao);
-    std::cout << "here2" << std::endl;
-    BasicShape walls = importer.loadFiles("./models/walls", import_vao);
-    std::cout << "floor and walls ok" << std::endl;
+    // BasicShape floor = importer.loadFiles("./models/floor", import_vao);
+    // std::cout << "here2" << std::endl;
+    // BasicShape walls = importer.loadFiles("./models/walls", import_vao);
+    // std::cout << "floor and walls ok" << std::endl;
     BasicShape targets = importer.loadFiles("./models/targets", import_vao);
     std::cout << "targets" << std::endl;
 
     unsigned int wall_tex = GetTexture("./images/plywood.jpg");
     unsigned int floor_tex = GetTexture("./images/concrete.jpg");
-    unsigned int target_tex = GetTexture("./images/space.jpg");
+    unsigned int target_tex = GetTexture("./images/target.jpg");
 
-    Maze maze(walls, floor, targets, wall_tex, floor_tex, target_tex);
+    //Maze maze(walls, floor, targets, wall_tex, floor_tex, target_tex);
     std::cout << "makes the maze" << std::endl;
 
     // BasicShape* mazepointer = &maze;
@@ -226,7 +226,20 @@ int main () {
         texture_shader.use();
 
         //Draws the maze
-        maze.Draw(&import_shader);
+
+        import_shader.use();
+        import_shader.setMat4("transform", glm::mat4(1.0));
+        glm::mat4 targets_model = glm::mat4(1.0);
+        targets_model = glm::rotate(targets_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
+        targets_model = glm::translate(targets_model, glm::vec3(0.0));
+        targets_model = glm::scale(targets_model, glm::vec3(1.5));
+        import_shader.setMat4("model", targets_model);
+        import_shader.setBool("use_texture", true);
+        glBindTexture(GL_TEXTURE_2D, target_tex);
+        import_shader.setMat4("transform", glm::mat4(1.0f));
+        targets.Draw();
+
+        //maze.Draw(&import_shader);
         
         // Draws the player
         player.Draw(&import_shader);
