@@ -40,5 +40,5 @@ void Maze::Draw(Shader* shader){
     shader -> setBool("use_texture", true);
     shader -> setMat4("transform", glm::mat4(1.0f));
     targets.Draw();
-
+}
     
