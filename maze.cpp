@@ -37,16 +37,16 @@ void Maze::Draw(Shader* shader){
     //glBindTexture(GL_TEXTURE_2D, 0);
 
 
-    shader -> setMat4("transform", glm::mat4(1.0));
-    glm::mat4 targets_model = glm::mat4(1.0);
-    targets_model = glm::rotate(targets_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
-    targets_model = glm::translate(targets_model, glm::vec3(0.0));
-    targets_model = glm::scale(targets_model, glm::vec3(1.5));
-    shader -> setMat4("model", targets_model);
-    shader -> setBool("use_texture", true);
-    glBindTexture(GL_TEXTURE_2D, target_texture);
-    shader -> setMat4("transform", glm::mat4(1.0f));
-    targets.Draw();
+    // shader -> setMat4("transform", glm::mat4(1.0));
+    // glm::mat4 targets_model = glm::mat4(1.0);
+    // targets_model = glm::rotate(targets_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
+    // targets_model = glm::translate(targets_model, glm::vec3(0.0));
+    // targets_model = glm::scale(targets_model, glm::vec3(1.5));
+    // shader -> setMat4("model", targets_model);
+    // shader -> setBool("use_texture", true);
+    // glBindTexture(GL_TEXTURE_2D, target_texture);
+    // shader -> setMat4("transform", glm::mat4(1.0f));
+    // targets.Draw();
     //glBindTexture(GL_TEXTURE_2D, 0);
 
 }
