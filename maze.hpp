@@ -14,8 +14,13 @@ class Maze {
         BasicShape floor;
         BasicShape targets;
 
+        unsigned int walls_texture;
+        unsigned int floor_texture;
+        unsigned int target_texture;
+
     public:
-        Maze(BasicShape walls, BasicShape floor, BasicShape targets);
+        Maze(BasicShape walls, BasicShape floor, BasicShape targets,
+        unsigned int walls_texture, unsigned int floor_texture, unsigned int target_texture);
 
         void CreateMaze(ImportOBJ importer, VAOStruct import_vao);
 

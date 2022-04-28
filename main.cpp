@@ -116,7 +116,11 @@ int main () {
     std::cout << "floor and walls ok" << std::endl;
     BasicShape targets = importer.loadFiles("./models/targets", import_vao);
 
-    Maze maze(walls, floor, targets);
+    unsigned int wall_tex = GetTexture("./images/plywood.jpg");
+    unsigned int floor_tex = GetTexture("./images/concrete.jpg");
+    unsigned int target_tex = GetTexture("./images/target.jpg");
+
+    Maze maze(walls, floor, targets, wall_tex, floor_tex, target_tex);
     std::cout << "makes the maze" << std::endl;
 
     // BasicShape* mazepointer = &maze;
