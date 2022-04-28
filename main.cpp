@@ -8,6 +8,7 @@
 #include "import_object.hpp"
 #include "player.hpp"
 #include "bullet.hpp"
+#include "maze.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -110,8 +111,13 @@ int main () {
     // BasicShape floor = importer.loadFiles()
 
 
-    BasicShape maze = importer.loadFiles("./models/floor",import_vao);
-    BasicShape* mazepointer = &maze;
+    BasicShape floor = importer.loadFiles("./models/floor", import_vao);
+    BasicShape walls = importer.loadFiles("./models/walls", import_vao);
+    BasicShape targets = importer.loadFiles("./models/targets", import_vao);
+
+    Maze maze(walls, floor, targets);
+
+    // BasicShape* mazepointer = &maze;
     Player player(importer.loadFiles("./models/low_poly", import_vao));
     Player* player_pointer = &player;
     Bullet bullet(importer.loadFiles("./models/bullet", import_vao), &player);
@@ -156,19 +162,6 @@ int main () {
     while (!glfwWindowShouldClose(window)) {
         // updates player position and angle based on input
         player.process_input(window, top_cam);
-        
-        // I was trying to implement a spotlight that followed the player
-        // and looked where it was looking, but I couldn't get it to work.
-
-        // import_shader.setVec4("spot_light.position", glm::vec4(player.getLocation().x, player.getLocation().y + 0.5, player.getLocation().z, 1.0));
-        // import_shader.setVec4("spot_light.direction", glm::vec4((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 0.8, (sin(glm::radians(-1*(player_pointer->angle_z)))), 1.0));
-        // import_shader.setVec4("spot_light.ambient", glm::vec4(1.0));
-        // import_shader.setVec4("spot_light.diffuse", glm::vec4(1.0));
-        // import_shader.setVec4("spot_light.specular", glm::vec4(1.0));
-        // import_shader.setFloat("spot_light.cutoff", glm::cos(glm::radians(10.0f)));
-        // import_shader.setFloat("spot_light.outer_cutoff", glm::cos(glm::radians(10.0f)));
-        // import_shader.setBool("spot_light.on", true);
-
         
         //input
         processInput(window, &player, import_vao, importer, bullet);
@@ -225,17 +218,7 @@ int main () {
         texture_shader.use();
 
         //Draws the maze
-        import_shader.use();
-        glm::mat4 maze_model = glm::mat4(1.0);
-        maze_model = glm::rotate(maze_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
-        maze_model = glm::translate(maze_model, glm::vec3(0.0));
-        maze_model = glm::scale(maze_model, glm::vec3(1.5));
-        import_shader.setMat4("model", maze_model);
-        import_shader.setBool("use_texture", true);
-        texture_shader.setMat4("transform", glm::mat4(1.0f));
-        //glBindTexture(GL_TEXTURE_2D, floor_texture);
-        maze.Draw();
-        import_shader.setBool("use_texture", false);
+        maze.Draw(&import_shader);
         
         // Draws the player
         player.Draw(&import_shader);
