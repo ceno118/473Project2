@@ -7,8 +7,8 @@
 
 class Maze {
     protected:
-        std::vector<VAOStruct> vaos;
-        std::vector<Shader> shaders;
+        // std::vector<VAOStruct> vaos;
+        // std::vector<Shader> shaders;
 
         BasicShape walls;
         BasicShape floor;

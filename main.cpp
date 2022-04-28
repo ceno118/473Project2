@@ -110,12 +110,14 @@ int main () {
 
     // BasicShape floor = importer.loadFiles()
 
-
     BasicShape floor = importer.loadFiles("./models/floor", import_vao);
+    std::cout << "here2" << std::endl;
     BasicShape walls = importer.loadFiles("./models/walls", import_vao);
+    std::cout << "floor and walls ok" << std::endl;
     BasicShape targets = importer.loadFiles("./models/targets", import_vao);
 
     Maze maze(walls, floor, targets);
+    std::cout << "makes the maze" << std::endl;
 
     // BasicShape* mazepointer = &maze;
     Player player(importer.loadFiles("./models/low_poly", import_vao));
@@ -159,6 +161,7 @@ int main () {
 
     //The render loop -- the function in the condition checks if the 
     //  window has been set to close (does this each iteration)
+    std::cout << "gets to render" << std::endl;
     while (!glfwWindowShouldClose(window)) {
         // updates player position and angle based on input
         player.process_input(window, top_cam);
