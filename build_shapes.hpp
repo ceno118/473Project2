@@ -28,4 +28,6 @@ BasicShape GetStars (VAOStruct vao, int num_stars = 1);
 //Generates a texture and returns it (default wrapping and filtering assumed).
 unsigned int GetTexture (std::string file_name,bool flip_on_load=false);
 
+unsigned int loadCubemap(std::vector<std::string> faces, bool flip_on_load = false);
+
 #endif //BUILD_SHAPES_HPP

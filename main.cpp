@@ -9,6 +9,8 @@
 #include "player.hpp"
 #include "bullet.hpp"
 #include "maze.hpp"
+#include "stb_image.h"
+
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -39,6 +41,7 @@ double lastY = screen_height/2.0;
 
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+unsigned int loadCubemap(vector<std::string> faces);
 
 glm::mat4 view = glm::mat4(1.0);
 int main () {
@@ -47,8 +50,7 @@ int main () {
     if (window == NULL) {
         return -1;
     }
-    
-    
+
     float ambient_strength = 0.3;
     glm::vec4 light_color = glm::vec4(1.0);
     glm::vec4 light_position = glm::vec4(0.0, 10.0, 0.0, 1.0);
@@ -67,6 +69,7 @@ int main () {
     
     Shader import_shader("./shaders/importVertexShader.glsl","./shaders/importFragmentShader.glsl");
     Shader texture_shader("./shaders/textureVertexShader.glsl","./shaders/textureFragmentShader.glsl");
+    Shader skybox_shader("./shaders/skyboxVertexShader.glsl", "./shaders/skyboxFragmentShader.glsl");
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
@@ -102,6 +105,73 @@ int main () {
     import_vao.attributes.push_back(import_tex_attr);
     import_vao.attributes.push_back(import_color_attr);
     import_vao.attributes.push_back(import_spec_col_attr);
+
+
+    // SKYBOX
+
+    float skyboxVertices[] = {
+    // positions
+    -1.0f,  1.0f, -1.0f,
+    -1.0f, -1.0f, -1.0f,
+    1.0f, -1.0f, -1.0f,
+    1.0f, -1.0f, -1.0f,
+    1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+
+    -1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f, -1.0f,
+    -1.0f,  1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
+
+    1.0f, -1.0f, -1.0f,
+    1.0f, -1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f, -1.0f,
+    1.0f, -1.0f, -1.0f,
+
+    -1.0f, -1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,
+    1.0f, -1.0f,  1.0f,
+    -1.0f, -1.0f,  1.0f,
+
+    -1.0f,  1.0f, -1.0f,
+    1.0f,  1.0f, -1.0f,
+    1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f,  1.0f,
+    -1.0f,  1.0f, -1.0f,
+
+    -1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f,  1.0f,
+    1.0f, -1.0f, -1.0f,
+    1.0f, -1.0f, -1.0f,
+    -1.0f, -1.0f,  1.0f,
+    1.0f, -1.0f,  1.0f
+};
+    vector<std::string> faces{
+        "./images/right.jpg",
+        "./images/left.jpg",
+        "./images/top.jpg",
+        "./images/bottom.jpg",
+        "./images/front.jpg",
+        "./images/back.jpg"
+    };
+
+    unsigned int skyboxVAO, skyboxVBO;
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    
+    unsigned int cubemapTexture = loadCubemap(faces, false);
     
     
     //Create an import object to import different blender-generated shapes
@@ -273,6 +343,25 @@ int main () {
             bullet.Move();
             bullet.Draw(&import_shader);
         }
+
+        skybox_shader.use();
+        glm::mat4 skybox_view = glm::mat4(glm::mat3(curr_camera -> GetViewMatrix()));
+        skybox_shader.setMat4("view", skybox_view);
+        skybox_shader.setMat4("projection", project);
+
+        glDepthFunc(GL_EQUAL);
+
+        glBindVertexArray(skyboxVAO);
+        glActiveTexture(0);
+        skybox_shader.setInt("skybox", 0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
+
+
+
+
         glfwSwapBuffers(window);
 
         //checks if any events are triggered (keyboard or mouse input)
