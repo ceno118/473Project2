@@ -390,9 +390,10 @@ int main () {
 
         auto curr_time = std::chrono::system_clock::now();
         std::chrono::duration<double> time_passed = curr_time - start_time;
-        char elapsed_time[10];
+        char elapsed_time[6];
         snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
         
+        arialFont.DrawText("Time: ", glm::vec2(-0.5, 0.0), font_program);
         arialFont.DrawText(elapsed_time, glm::vec2(0), font_program);
 
 
