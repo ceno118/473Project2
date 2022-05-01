@@ -249,7 +249,7 @@ int main () {
         shaders[i]->setVec4("direction_light.ambient",0.3f*dir_light_color);
         shaders[i]->setVec4("direction_light.diffuse",dir_light_color);
         shaders[i]->setVec4("direction_light.specular",dir_light_color);
-        shaders[i]->setBool("direction_light.on",false);
+        shaders[i]->setBool("direction_light.on",true);
         shaders[i]->setVec4("spot_light.position", glm::vec4(player.getLocation().x, player.getLocation().y + 0.8, player.getLocation().z, 1.0));
         shaders[i]->setBool("spot_light.on",false);
     }
@@ -270,7 +270,7 @@ int main () {
 
         if (red){
            for (int i = 0; i < shaders.size(); i++){
-               shaders[i]->setVec4("direction_light.ambient", 0.3f*red_light_color); 
+                shaders[i]->setVec4("direction_light.ambient", 0.3f*red_light_color); 
            }
         }
         else{
