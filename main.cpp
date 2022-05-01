@@ -233,7 +233,7 @@ int main () {
     font_program.setInt("texture1", 0);
     
     
-    std::vector<Shader*> shaders {&texture_shader,&import_shader, &skybox_shader};
+    std::vector<Shader*> shaders {&import_shader, &skybox_shader};
     for (int i = 0; i < shaders.size(); i++)
     {
         shaders[i]->use();
@@ -324,7 +324,7 @@ int main () {
             shaders[i]->setVec4("eye_position",glm::vec4(camera.Position,1.0));
         }
 
-        texture_shader.use();
+        //texture_shader.use();
 
         //Draws the maze
 
