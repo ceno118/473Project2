@@ -71,6 +71,9 @@ int main () {
     Shader import_shader("./shaders/importVertexShader.glsl","./shaders/importFragmentShader.glsl");
     Shader texture_shader("./shaders/textureVertexShader.glsl","./shaders/textureFragmentShader.glsl");
     Shader skybox_shader("./shaders/skyboxVertexShader.glsl", "./shaders/skyboxFragmentShader.glsl");
+    Shader font_program("./textureVertexShader.glsl", "./fontFragmentShader.glsl");
+
+    Font arialFont("fonts/ArialBlackLarge.bmp","fonts/ArialBlack.csv", 0.3, 0.4);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
@@ -211,7 +214,17 @@ int main () {
     glm::mat4 project = glm::mat4(1.0);
     project = glm::perspective(glm::radians(45.0f),(1.0f*screen_width)/(1.0f*screen_height),0.1f,100.0f);
 
-
+    // FONT PROGRAM
+    font_program.use();
+    font_program.setMat4("view",glm::mat4(1.0));
+    font_program.setMat4("model",glm::mat4(1.0));
+    font_program.setMat4("transform",glm::mat4(1.0f));
+    font_program.setMat4("projection", glm::ortho(-3.0, 3.0, -3.0, 3.0, -1.0, 1.0));
+    font_program.setVec4("transparentColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    font_program.setFloat("alpha", 0.0);
+    font_program.setInt("texture1", 0);
+    
+    
     std::vector<Shader*> shaders {&texture_shader,&import_shader};
     for (int i = 0; i < shaders.size(); i++)
     {
@@ -364,6 +377,9 @@ int main () {
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
+
+        char test[5] = "1111";
+        arialFont.DrawText(test, glm::vec2(0), font_program);
 
 
 
