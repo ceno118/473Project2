@@ -67,13 +67,13 @@ int main () {
 
     glm::vec4 dir_light_color = glm::vec4(1.0,1.0,1.0,1.0);
     glm::vec4 dir_light_direction = glm::vec4(1.0,-1.0,0.0,0.0);
-    
+    Font arialFont("fonts/ArialBlackLarge.bmp","fonts/ArialBlack.csv", 0.3, 0.4);
+
     Shader import_shader("./shaders/importVertexShader.glsl","./shaders/importFragmentShader.glsl");
     Shader texture_shader("./shaders/textureVertexShader.glsl","./shaders/textureFragmentShader.glsl");
     Shader skybox_shader("./shaders/skyboxVertexShader.glsl", "./shaders/skyboxFragmentShader.glsl");
-    Shader font_program("./textureVertexShader.glsl", "./fontFragmentShader.glsl");
+    Shader font_program("./shaders/textureVertexShader.glsl", "./shaders/fontFragmentShader.glsl");
 
-    Font arialFont("fonts/ArialBlackLarge.bmp","fonts/ArialBlack.csv", 0.3, 0.4);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
@@ -91,6 +91,8 @@ int main () {
     texture_vao.attributes.push_back(texture_pos_attr);
     texture_vao.attributes.push_back(texture_attr);
     texture_vao.attributes.push_back(normal_attr);
+
+    arialFont.initialize(texture_vao);
 
     //Vertex Array Object for imported VBOs
     VAOStruct import_vao;
@@ -221,7 +223,7 @@ int main () {
     font_program.setMat4("transform",glm::mat4(1.0f));
     font_program.setMat4("projection", glm::ortho(-3.0, 3.0, -3.0, 3.0, -1.0, 1.0));
     font_program.setVec4("transparentColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-    font_program.setFloat("alpha", 0.0);
+    font_program.setFloat("alpha", 0.3);
     font_program.setInt("texture1", 0);
     
     
@@ -362,7 +364,7 @@ int main () {
             bullet.Move();
             bullet.Draw(&import_shader);
         }
-
+        
         skybox_shader.use();
         glm::mat4 skybox_view = glm::mat4(glm::mat3(curr_camera -> GetViewMatrix()));
         skybox_shader.setMat4("view", skybox_view);
@@ -378,9 +380,9 @@ int main () {
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
 
-        char test[5] = "1111";
-        arialFont.DrawText(test, glm::vec2(0), font_program);
-
+        
+        char test[5] = "aaaa";
+        arialFont.DrawText(test, glm::vec2(0.0, 0.0), font_program);
 
 
 
