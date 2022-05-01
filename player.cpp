@@ -5,7 +5,7 @@
 
 Player::Player(BasicShape body) {
     this -> angle_z = 90.0;
-    this -> location = glm::vec3(0.0, -1.5, 10.0);
+    this -> location = glm::vec3(0.0, -1.2, 10.0);
     this -> bullet_loc = this -> location;
     this -> shape = body;
 }
@@ -31,7 +31,7 @@ void Player::Draw(Shader* shader){
 
     player_model = glm::translate(player_model, this -> location);
     player_model = glm::rotate(player_model, glm::radians(this -> angle_z -90), glm::vec3(0.0, 1.0, 0.0));
-    player_model = glm::scale(player_model, glm::vec3(0.1));
+    player_model = glm::scale(player_model, glm::vec3(0.15));
     shader->setMat4("model", player_model);
     shader->setMat4("transform", glm::mat4(1.0));
     this->shape.Draw();
