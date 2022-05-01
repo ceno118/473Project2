@@ -271,13 +271,13 @@ int main () {
          if (red){
            for (int i = 0; i < shaders.size(); i++){
                 shaders[i]->use();
-                shaders[i]->setVec4("direction_light.ambient", 0.3f*red_light_color); 
+                shaders[i]->setVec4("direction_light.ambient", 0.6f*red_light_color); 
            }
         }
         else{
             for (int i = 0; i < shaders.size(); i++){
                 shaders[i]->use();
-                shaders[i]->setVec4("direction_light.ambient",0.3f*dir_light_color);
+                shaders[i]->setVec4("direction_light.ambient",0.6f*dir_light_color);
             }
         }
         
