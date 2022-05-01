@@ -31,7 +31,7 @@ void Bullet::Move(){
 }
 
 void Bullet::Reset(){
-    this->location = player -> location;
+    this->location = player -> location + glm::vec3(0,0.3,0);
     this -> angle_z = player ->angle_z;
 }
 
