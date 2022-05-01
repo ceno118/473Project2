@@ -5,7 +5,7 @@
 
 Player::Player(BasicShape body) {
     this -> angle_z = 90.0;
-    this -> location = glm::vec3(0.0, -3.0, 10.0);
+    this -> location = glm::vec3(0.0, -1.0, 10.0);
     this -> bullet_loc = this -> location;
     this -> shape = body;
 }
