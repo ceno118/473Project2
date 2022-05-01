@@ -280,12 +280,12 @@ int main () {
             view = glm::lookAt((player_pointer->location + glm::vec3(0,20,0)), player_pointer->location, glm::vec3(0,0,-1));
         }
         else if (third_cam){// third person
-            glm::vec3 lookFrom = glm::vec3(-1.5*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2, -1.5*(sin(glm::radians(-1*(player_pointer->angle_z)))));
+            glm::vec3 lookFrom = glm::vec3(-1.5*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 0.8, -1.5*(sin(glm::radians(-1*(player_pointer->angle_z)))));
             glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 0.8, (sin(glm::radians(-1*(player_pointer->angle_z)))));
             view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
         }
         else if (first_cam){//first person
-            glm::vec3 lookFrom = glm::vec3(-1*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2, -1.5*(sin(glm::radians(-1*(player_pointer->angle_z)))));
+            glm::vec3 lookFrom = glm::vec3(-1.5*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y, -1.5*(sin(glm::radians(-1*(player_pointer->angle_z)))));
             glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 0.8, (sin(glm::radians(-1*(player_pointer->angle_z)))));
             view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
         }
