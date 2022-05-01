@@ -29,7 +29,7 @@ bool top_cam = false;
 bool third_cam = false;
 bool first_cam = false;
 bool shot_out = false;
-bool red = false;
+bool nvg = false;
 float rotation_x = 0.0;
 float rotation_z = 90.0;
 
@@ -72,7 +72,7 @@ int main () {
 
     glm::vec4 dir_light_color = glm::vec4(1.0,1.0,1.0,1.0);
     glm::vec4 dir_light_direction = glm::vec4(1.0,-1.0,0.0,0.0);
-    glm::vec4 red_light_color = glm::vec4(1.0, 0.0, 0.0, 1.0);
+    glm::vec4 green_light_color = glm::vec4(0.0, 1.0, 0.0, 1.0);
     Font arialFont("fonts/ArialBlackLarge.bmp","fonts/ArialBlack.csv", 0.3, 0.4);
 
     Shader import_shader("./shaders/importVertexShader.glsl","./shaders/importFragmentShader.glsl");
@@ -246,7 +246,7 @@ int main () {
         // ambient light
         
         shaders[i]->setVec4("direction_light.direction",dir_light_direction);
-        shaders[i]->setVec4("direction_light.ambient",0.3f*red_light_color);
+        shaders[i]->setVec4("direction_light.ambient",0.3f*dir_light_color);
         shaders[i]->setVec4("direction_light.diffuse",dir_light_color);
         shaders[i]->setVec4("direction_light.specular",dir_light_color);
         shaders[i]->setBool("direction_light.on",true);
@@ -268,16 +268,19 @@ int main () {
         //input
         processInput(window, &player, import_vao, importer, bullet);
 
-         if (red){
+         if (nvg){
            for (int i = 0; i < shaders.size(); i++){
                 shaders[i]->use();
-                shaders[i]->setVec4("direction_light.ambient", 0.6f*red_light_color); 
+                shaders[i]->setVec4("direction_light.ambient", 0.6f*green_light_color); 
+                shaders[i]->setVec4("ambient", 2.0f*green_light_color);
            }
         }
         else{
             for (int i = 0; i < shaders.size(); i++){
                 shaders[i]->use();
-                shaders[i]->setVec4("direction_light.ambient",0.6f*dir_light_color);
+                shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
+                shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
+
             }
         }
         
@@ -369,7 +372,7 @@ int main () {
         // Draws the player
         import_shader.use();
         import_shader.setVec4("direction_light.ambient", glm::vec4(0.0, 0.0, 1.0, 1.0));
-        player.Draw(&import_shader);
+        player.Draw(&import_shader, nvg);
         
         // Draws the bullet and updates its position
         if (shot_out){
@@ -405,8 +408,8 @@ int main () {
 
         arialFont.DrawText("Targets Remaining: 7", glm::vec2(-3, 2), font_program);
 
-        if (red){
-            arialFont.DrawText("View: red", glm::vec2(-3, 1.5), font_program);
+        if (nvg){
+            arialFont.DrawText("View: NVG", glm::vec2(-3, 1.5), font_program);
         }
         else{
             arialFont.DrawText("View: default", glm::vec2(-3, 1.5), font_program);
@@ -469,11 +472,11 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
         bullet.Shoot(player->location, player->angle_z);
         shot_out = true;
     }
-    if(glfwGetKey(window, GLFW_KEY_R)==GLFW_PRESS && !red){
-        red = true;
+    if(glfwGetKey(window, GLFW_KEY_G)==GLFW_PRESS && !nvg){
+        nvg = true;
     }
-    if(glfwGetKey(window, GLFW_KEY_N)==GLFW_PRESS && red){
-        red = false;
+    if(glfwGetKey(window, GLFW_KEY_N)==GLFW_PRESS && nvg){
+        nvg = false;
     }
 
     // moves free flying camera

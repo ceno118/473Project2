@@ -27,7 +27,7 @@ class Player {
 
         void Move();
         
-        void Draw(Shader* shader);
+        void Draw(Shader* shader, bool nvg);
 
         void process_input(GLFWwindow* window, bool top_cam);
         void setMaterial(Material m);
