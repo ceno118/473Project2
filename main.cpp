@@ -268,13 +268,15 @@ int main () {
         //input
         processInput(window, &player, import_vao, importer, bullet);
 
-        if (red){
+         if (red){
            for (int i = 0; i < shaders.size(); i++){
+                shaders[i]->use();
                 shaders[i]->setVec4("direction_light.ambient", 0.3f*red_light_color); 
            }
         }
         else{
             for (int i = 0; i < shaders.size(); i++){
+                shaders[i]->use();
                 shaders[i]->setVec4("direction_light.ambient",0.3f*dir_light_color);
             }
         }
@@ -365,6 +367,8 @@ int main () {
         //maze.Draw(&import_shader);
         
         // Draws the player
+        import_shader.use();
+        import_shader.setVec4("direction_light.ambient", glm::vec4(0.0, 0.0, 1.0, 1.0));
         player.Draw(&import_shader);
         
         // Draws the bullet and updates its position
@@ -384,6 +388,7 @@ int main () {
         glActiveTexture(0);
         skybox_shader.setInt("skybox", 0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+        skybox_shader.setVec4("direction_light.ambient", glm::vec4(1.0, 0.0, 0.0, 1.0));
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
