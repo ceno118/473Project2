@@ -246,7 +246,7 @@ int main () {
         // ambient light
         
         shaders[i]->setVec4("direction_light.direction",dir_light_direction);
-        shaders[i]->setVec4("direction_light.ambient",0.3f*dir_light_color);
+        shaders[i]->setVec4("direction_light.ambient",0.3f*red_light_color);
         shaders[i]->setVec4("direction_light.diffuse",dir_light_color);
         shaders[i]->setVec4("direction_light.specular",dir_light_color);
         shaders[i]->setBool("direction_light.on",true);
