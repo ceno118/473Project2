@@ -399,7 +399,12 @@ int main () {
 
         arialFont.DrawText("Targets Remaining: 7", glm::vec2(-3, 2), font_program);
 
-        
+        if (red){
+            arialFont.DrawText("View: red", glm::vec2(-3, 1.5), font_program);
+        }
+        else{
+            arialFont.DrawText("View: default", glm::vec2(-3, 1.5), font_program);
+        }
 
 
 
