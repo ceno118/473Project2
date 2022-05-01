@@ -11,6 +11,9 @@
 #include "maze.hpp"
 #include "stb_image.h"
 
+#include <chrono>
+#include <ctime>
+
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -52,6 +55,8 @@ int main () {
         return -1;
     }
 
+    auto start_time = std::chrono::system_clock::now();
+    
     float ambient_strength = 0.3;
     glm::vec4 light_color = glm::vec4(1.0);
     glm::vec4 light_position = glm::vec4(0.0, 10.0, 0.0, 1.0);
@@ -255,6 +260,8 @@ int main () {
         // updates player position and angle based on input
         player.process_input(window, top_cam);
         
+        
+        
         //input
         processInput(window, &player, import_vao, importer, bullet);
 
@@ -378,8 +385,13 @@ int main () {
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
 
-        char test[5] = "1111";
-        arialFont.DrawText(test, glm::vec2(0), font_program);
+
+        auto curr_time = std::chrono::system_clock::now();
+        std::chrono::duration<double> time_passed = curr_time - start_time;
+        char elapsed_time[10];
+        snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
+        
+        arialFont.DrawText(elapsed_time, glm::vec2(0), font_program);
 
 
 
