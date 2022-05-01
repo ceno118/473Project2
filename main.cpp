@@ -70,8 +70,9 @@ int main () {
 
     unsigned int floor_texture = GetTexture("./images/hull_texture.png");
 
-    glm::vec4 dir_light_color = glm::vec4(1.0,0.0,0.0,1.0);
+    glm::vec4 dir_light_color = glm::vec4(1.0,1.0,1.0,1.0);
     glm::vec4 dir_light_direction = glm::vec4(1.0,-1.0,0.0,0.0);
+    glm::vec4 red_light_color = glm::vec4(1.0, 0.0, 0.0, 1.0);
     Font arialFont("fonts/ArialBlackLarge.bmp","fonts/ArialBlack.csv", 0.3, 0.4);
 
     Shader import_shader("./shaders/importVertexShader.glsl","./shaders/importFragmentShader.glsl");
@@ -245,7 +246,7 @@ int main () {
         // ambient light
         
         shaders[i]->setVec4("direction_light.direction",dir_light_direction);
-        shaders[i]->setVec4("direction_light.ambient",0.3f*dir_light_color);
+        shaders[i]->setVec4("direction_light.ambient",0.3f*red_light_color);
         shaders[i]->setVec4("direction_light.diffuse",dir_light_color);
         shaders[i]->setVec4("direction_light.specular",dir_light_color);
         shaders[i]->setBool("direction_light.on",true);
@@ -269,7 +270,7 @@ int main () {
 
         if (red){
            for (int i = 0; i < shaders.size(); i++){
-               shaders[i]->setVec4("direction_light.ambient", 0.3f*glm::vec4(1, 0, 0, 1)); 
+               shaders[i]->setVec4("direction_light.ambient", 0.3f*red_light_color); 
            }
         }
         else{
