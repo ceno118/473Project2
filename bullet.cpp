@@ -5,7 +5,7 @@
 #include "bullet.hpp"
 
 Bullet::Bullet(BasicShape body, Player* player){
-    this -> location = player -> location;
+    this -> location = player -> location + glm::vec3(0,0.3,0);
     this -> angle_z = player -> angle_z;
     this -> shape = body;
     this -> shapepointer = &shape;
@@ -19,7 +19,7 @@ void Bullet::Draw(Shader* shader){
 
     bullet_model = glm::translate(bullet_model, glm::vec3(this -> location.x, this->location.y + 0.8, this->location.z));
     bullet_model = glm::rotate(bullet_model, glm::radians(this -> angle_z -90), glm::vec3(0.0, 1.0, 0.0));
-    bullet_model = glm::scale(bullet_model, glm::vec3(0.5));
+    bullet_model = glm::scale(bullet_model, glm::vec3(0.2));
     shader->setMat4("model", bullet_model);
     shader->setMat4("transform", glm::mat4(1.0));
     this->shape.Draw();
