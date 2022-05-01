@@ -24,6 +24,7 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
 bool main_cam = true;
 bool top_cam = false;
 bool third_cam = false;
+bool first_cam = false;
 bool shot_out = false;
 bool red = false;
 float rotation_x = 0.0;
@@ -170,7 +171,7 @@ int main () {
     glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    
+
     unsigned int cubemapTexture = loadCubemap(faces, false);
     
     
@@ -283,6 +284,11 @@ int main () {
             glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 0.8, (sin(glm::radians(-1*(player_pointer->angle_z)))));
             view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
         }
+        else if (first_cam){//first person
+            glm::vec3 lookFrom = glm::vec3(-1*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 0.8, -1*(sin(glm::radians(-1*(player_pointer->angle_z)))));
+            glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 0.8, (sin(glm::radians(-1*(player_pointer->angle_z)))));
+            view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
+        }
         else {// catches any error where none of the camera bools are set
             main_cam = true;
         }
@@ -392,16 +398,25 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
         top_cam = true;
         main_cam = false;
         third_cam = false;
+        first_cam = false;
     }   
     if(glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS && !third_cam){
         third_cam = true;
         main_cam = false;
         top_cam = false;
+        first_cam = false;
     }
     if(glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && !main_cam){
         main_cam = true;
         top_cam = false;
         third_cam = false;
+        first_cam = false;
+    }
+    if(glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && !first_cam){
+        first_cam = true;
+        main_cam = false;
+        third_cam = false;
+        top_cam = false;
     }
     if(glfwGetKey(window, GLFW_KEY_SPACE)==GLFW_PRESS && !shot_out){
         bullet.Shoot(player->location, player->angle_z);
