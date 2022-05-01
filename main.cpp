@@ -70,7 +70,7 @@ int main () {
 
     unsigned int floor_texture = GetTexture("./images/hull_texture.png");
 
-    glm::vec4 dir_light_color = glm::vec4(1.0,1.0,1.0,1.0);
+    glm::vec4 dir_light_color = glm::vec4(1.0,0.0,0.0,1.0);
     glm::vec4 dir_light_direction = glm::vec4(1.0,-1.0,0.0,0.0);
     Font arialFont("fonts/ArialBlackLarge.bmp","fonts/ArialBlack.csv", 0.3, 0.4);
 
