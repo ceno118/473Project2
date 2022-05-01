@@ -228,7 +228,7 @@ int main () {
     font_program.setMat4("transform",glm::mat4(1.0f));
     font_program.setMat4("projection", glm::ortho(-3.0, 3.0, -3.0, 3.0, -1.0, 1.0));
     font_program.setVec4("transparentColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-    font_program.setFloat("alpha", 0.3);
+    font_program.setFloat("alpha", 0);
     font_program.setInt("texture1", 0);
     
     
@@ -393,8 +393,8 @@ int main () {
         char elapsed_time[6];
         snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
         
-        arialFont.DrawText("Time: ", glm::vec2(-0.5, 0.0), font_program);
-        arialFont.DrawText(elapsed_time, glm::vec2(0), font_program);
+        arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
+        arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
 
         
 
