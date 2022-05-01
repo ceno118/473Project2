@@ -232,7 +232,7 @@ int main () {
     font_program.setInt("texture1", 0);
     
     
-    std::vector<Shader*> shaders {&texture_shader,&import_shader};
+    std::vector<Shader*> shaders {&texture_shader,&import_shader, &skybox_shader};
     for (int i = 0; i < shaders.size(); i++)
     {
         shaders[i]->use();
