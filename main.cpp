@@ -387,7 +387,7 @@ int main () {
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
 
-
+        //https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
         auto curr_time = std::chrono::system_clock::now();
         std::chrono::duration<double> time_passed = curr_time - start_time;
         char elapsed_time[6];
@@ -395,6 +395,8 @@ int main () {
         
         arialFont.DrawText("Time: ", glm::vec2(-0.5, 0.0), font_program);
         arialFont.DrawText(elapsed_time, glm::vec2(0), font_program);
+
+        
 
 
 
