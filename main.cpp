@@ -33,6 +33,9 @@ bool nvg = false;
 float rotation_x = 0.0;
 float rotation_z = 90.0;
 
+bool hud = true;
+bool hud_pressed = false;
+
 Camera  camera(glm::vec3(2.0,3.0,7.0),glm::vec3(0.0,1.0,0.0),0.0f,-25.0f);
 Camera  *curr_camera = &camera;
 
@@ -308,8 +311,8 @@ int main () {
             view = glm::lookAt((player_pointer->location + glm::vec3(0,20,0)), player_pointer->location, glm::vec3(0,0,-1));
         }
         else if (third_cam){// third person
-            glm::vec3 lookFrom = glm::vec3(-1.5*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2, -1.5*(sin(glm::radians(-1*(player_pointer->angle_z)))));
-            glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2, (sin(glm::radians(-1*(player_pointer->angle_z)))));
+            glm::vec3 lookFrom = glm::vec3(-2*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 3.5, -2*(sin(glm::radians(-1*(player_pointer->angle_z)))));
+            glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2.8, (sin(glm::radians(-1*(player_pointer->angle_z)))));
             view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
         }
         else if (first_cam){//first person
@@ -403,16 +406,18 @@ int main () {
         char elapsed_time[6];
         snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
         
-        arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
-        arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
+        if (hud){
+            arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
+            arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
 
-        arialFont.DrawText("Targets Remaining: 7", glm::vec2(-3, 2), font_program);
+            arialFont.DrawText("Targets Remaining: 7", glm::vec2(-3, 2), font_program);
 
-        if (nvg){
-            arialFont.DrawText("View: NVG", glm::vec2(-3, 1.5), font_program);
-        }
-        else{
-            arialFont.DrawText("View: default", glm::vec2(-3, 1.5), font_program);
+            if (nvg){
+                arialFont.DrawText("View: NVG", glm::vec2(-3, 1.5), font_program);
+            }
+            else{
+                arialFont.DrawText("View: default", glm::vec2(-3, 1.5), font_program);
+            }
         }
 
 
@@ -444,6 +449,17 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     
+    if(glfwGetKey(window, GLFW_KEY_H)==GLFW_PRESS && hud && !hud_pressed){
+        hud = false;
+        hud_pressed = true;
+    }
+    if (glfwGetKey(window, GLFW_KEY_H)==GLFW_PRESS && !hud && !hud_pressed){
+        hud = true;
+        hud_pressed = true;
+    }
+    if (glfwGetKey(window, GLFW_KEY_H) == GLFW_RELEASE && hud_pressed){
+        hud_pressed = false;
+    }
     if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && !top_cam){ //alt cam
         top_cam = true;
         main_cam = false;
