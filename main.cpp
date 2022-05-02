@@ -416,7 +416,18 @@ int main () {
             }
         }
 
-
+        unsigned int rgba = 0xff0000ff; // red, no alpha
+        glBegin(GL_QUADS);
+        glColor4f(((rgba>>24)&0xff)/255.0f,
+                ((rgba>>16)&0xff)/255.0f, 
+                ((rgba>>8)&0xff)/255.0f,
+                (rgba&0xff)/255.0f);
+        glVertex3f(0,0,0);
+        glVertex3f(50,0,0);
+        glVertex3f(50,50,0);
+        glVertex3f(0,50,0);
+        glEnd();
+        glColor4f(1, 1, 1, 1);
 
 
         glfwSwapBuffers(window);
