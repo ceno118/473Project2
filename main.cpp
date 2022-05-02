@@ -24,9 +24,8 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
 
 //Global Variables
 
-bool main_cam = true;
 bool top_cam = false;
-bool third_cam = false;
+bool third_cam = true;
 bool first_cam = false;
 bool shot_out = false;
 bool nvg = false;
@@ -304,10 +303,7 @@ int main () {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Sets camera type/position based on user input
-        if (main_cam){// free flying
-            view = curr_camera->GetViewMatrix();
-        }
-        else if (top_cam){// top down on player
+        if (top_cam){// top down on player
             view = glm::lookAt((player_pointer->location + glm::vec3(0,20,0)), player_pointer->location, glm::vec3(0,0,-1));
         }
         else if (third_cam){// third person
@@ -321,7 +317,7 @@ int main () {
             view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
         }
         else {// catches any error where none of the camera bools are set
-            main_cam = true;
+            third_cam = true;
         }
         
         for (int i = 0; i < shaders.size(); i++) {
@@ -460,27 +456,18 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
     if (glfwGetKey(window, GLFW_KEY_H) == GLFW_RELEASE && hud_pressed){
         hud_pressed = false;
     }
-    if(glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS && !top_cam){ //alt cam
+    if(glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS && !top_cam){ //alt cam
         top_cam = true;
-        main_cam = false;
         third_cam = false;
         first_cam = false;
     }   
-    if(glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS && !third_cam){
+    if(glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS && !third_cam){
         third_cam = true;
-        main_cam = false;
         top_cam = false;
         first_cam = false;
     }
-    if(glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS && !main_cam){
-        main_cam = true;
-        top_cam = false;
-        third_cam = false;
-        first_cam = false;
-    }
-    if(glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && !first_cam){
+    if(glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS && !first_cam){
         first_cam = true;
-        main_cam = false;
         third_cam = false;
         top_cam = false;
     }
@@ -494,18 +481,6 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
     if(glfwGetKey(window, GLFW_KEY_N)==GLFW_PRESS && nvg){
         nvg = false;
     }
-
-    // moves free flying camera
-    if (main_cam){
-        std::vector<int> keys {GLFW_KEY_W, GLFW_KEY_S, GLFW_KEY_D, GLFW_KEY_A};
-        std::vector<Camera_Movement> directions {FORWARD, BACKWARD, RIGHT, LEFT};
-        for (int i = 0; i<keys.size(); i++){
-            if(glfwGetKey(window, keys[i])==GLFW_PRESS){
-                curr_camera->ProcessKeyboard(directions[i], 0.001);
-            }
-        }
-    }
-
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
