@@ -210,7 +210,7 @@ int main () {
     BasicShape targets = importer.loadFiles("./models/target2", import_vao);
     std::cout << "targets" << std::endl;
 
-    BasicShape hud_back = GetRectangle(texture_vao, glm::vec3(0,0,0), 100, 100);
+    BasicShape hud_back = GetRectangle(position_vao, glm::vec3(0,0,0), 1000, 1000);
 
     unsigned int wall_tex = GetTexture("./images/plywood.jpg");
     unsigned int floor_tex = GetTexture("./images/concrete.jpg");
@@ -432,12 +432,12 @@ int main () {
 
 
         //clear the color buffer (where things are drawn) using the current clear color.
-        glClear(GL_COLOR_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT);
         glPointSize(3.0);
 
-        basic_shader.use();
+        font_program.use();
         basic_shader.setVec4("offset_vec", glm::vec4(0.0));
-        basic_shader.setVec4("set_color", glm::vec4(1.0));
+        basic_shader.setVec4("set_color", glm::vec4(1.0, 1.0, 1.0, 0.0));
         hud_back.Draw();
 
         glfwSwapBuffers(window);
