@@ -45,9 +45,6 @@ int screen_height = 600;
 double lastX = screen_width/2.0;
 double lastY = screen_height/2.0;
 
-glm::vec4 offset_vec(0.0,0.0,0.0,0.0);
-glm::vec4 clear_color(0.0,0.0,0.0,1.0);
-
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 unsigned int loadCubemap(vector<std::string> faces);
 
@@ -83,8 +80,6 @@ int main () {
     Shader texture_shader("./shaders/textureVertexShader.glsl","./shaders/textureFragmentShader.glsl");
     Shader skybox_shader("./shaders/skyboxVertexShader.glsl", "./shaders/skyboxFragmentShader.glsl");
     Shader font_program("./shaders/textureVertexShader.glsl", "./shaders/fontFragmentShader.glsl");
-    Shader basic_shader("./shaders/vertexShader.glsl", "./shaders/fragmentShader.glsl");
-
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
@@ -123,12 +118,6 @@ int main () {
     import_vao.attributes.push_back(import_color_attr);
     import_vao.attributes.push_back(import_spec_col_attr);
 
-
-    // VAO for 2D shapes
-    VAOStruct position_vao;
-    glGenVertexArrays(1,&(position_vao.id));
-    AttributePointer position_attr = BuildAttribute(3,GL_FLOAT,false,3*sizeof(float),0);
-    position_vao.attributes.push_back(position_attr);
 
     // SKYBOX
 
@@ -209,8 +198,6 @@ int main () {
     std::cout << "floor and walls ok" << std::endl;
     BasicShape targets = importer.loadFiles("./models/target2", import_vao);
     std::cout << "targets" << std::endl;
-
-    BasicShape hud_back = GetRectangle(position_vao, glm::vec3(0,0,0), 1000, 1000);
 
     unsigned int wall_tex = GetTexture("./images/plywood.jpg");
     unsigned int floor_tex = GetTexture("./images/concrete.jpg");
@@ -337,8 +324,6 @@ int main () {
             shaders[i]->setVec4("eye_position",glm::vec4(camera.Position,1.0));
         }
 
-        //texture_shader.use();
-
         //Draws the maze
 
         import_shader.use();
@@ -376,8 +361,6 @@ int main () {
         glBindTexture(GL_TEXTURE_2D, target_tex);
         import_shader.setMat4("transform", glm::mat4(1.0f));
         targets.Draw();
-
-        //maze.Draw(&import_shader);
         
         // Draws the player
         import_shader.use();
@@ -428,17 +411,6 @@ int main () {
             }
         }
 
-        glClearColor(clear_color.r,clear_color.g,clear_color.b,clear_color.a);
-
-
-        //clear the color buffer (where things are drawn) using the current clear color.
-        //glClear(GL_COLOR_BUFFER_BIT);
-        glPointSize(3.0);
-
-        font_program.use();
-        basic_shader.setVec4("offset_vec", glm::vec4(0.0));
-        basic_shader.setVec4("set_color", glm::vec4(1.0, 1.0, 1.0, 0.0));
-        hud_back.Draw();
 
         glfwSwapBuffers(window);
 
