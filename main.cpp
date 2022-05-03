@@ -243,6 +243,7 @@ int main () {
         shaders[i]->setMat4("view",view);
         shaders[i]->setMat4("projection",project);
         shaders[i]->setBool("point_light.on",false);
+        shaders[i]->setBool("use_kernel", false);
 
         // ambient light
         

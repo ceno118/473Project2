@@ -74,7 +74,6 @@ float Attenuate(float distance, float constant, float linear, float quadratic);
 
 void main()
 {
-    
     vec2 offsets[9] = vec2[](
         vec2(-offset,  offset), // top-left
         vec2( 0.0f,    offset), // top-center
@@ -154,7 +153,7 @@ void main()
         return;
     }
     
-    FragColor = (point_light_vec+dir_light_vec+spot_light_vec)
+    FragColor = point_light_vec+dir_light_vec+spot_light_vec
 
     
 }
