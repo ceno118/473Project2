@@ -23,22 +23,22 @@ void Player::Move(){
     this -> location.z += 0.002*(sin(glm::radians(-1*(this -> angle_z))));
 }
 
-void Player::Draw(Shader* shader, bool nvg){
-    shader->use();
-    shader->setBool("use_texture", false);
-    shader->setMat4("transform", glm::mat4(1.0));
+void Player::Draw(Shader shader, bool nvg){
+    shader.use();
+    shader.setBool("use_texture", false);
+    shader.setMat4("transform", glm::mat4(1.0));
     glm::mat4 player_model = glm::mat4(1.0);
 
     player_model = glm::translate(player_model, this -> location);
     player_model = glm::rotate(player_model, glm::radians(this -> angle_z -90), glm::vec3(0.0, 1.0, 0.0));
     player_model = glm::scale(player_model, glm::vec3(0.15));
-    shader->setMat4("model", player_model);
-    shader->setMat4("transform", glm::mat4(1.0));
+    shader.setMat4("model", player_model);
+    shader.setMat4("transform", glm::mat4(1.0));
     if (nvg) {
-        shader->setVec4("direction_light.ambient", glm::vec4(0.0, 1.0, 0.0, 1.0));
+        shader.setVec4("direction_light.ambient", glm::vec4(0.0, 1.0, 0.0, 1.0));
     }
     else {
-        shader -> setVec4("direction_light.ambient", glm::vec4(0.3, 0.3, 0.3, 1.0));
+        shader . setVec4("direction_light.ambient", glm::vec4(0.3, 0.3, 0.3, 1.0));
     }
     this->shape.Draw();
 

@@ -29,7 +29,6 @@ bool third_cam = true;
 bool first_cam = false;
 bool shot_out = false;
 bool nvg = false;
-bool kernel = false;
 float rotation_x = 0.0;
 float rotation_z = 90.0;
 
@@ -243,7 +242,7 @@ int main () {
         shaders[i]->setMat4("view",view);
         shaders[i]->setMat4("projection",project);
         shaders[i]->setBool("point_light.on",false);
-        shaders[i]->setBool("use_kernel", false);
+        shaders[i]->setBool("use_nvg", false);
 
         // ambient light
         
@@ -277,15 +276,10 @@ int main () {
                 shaders[i]->setVec4("ambient", 2.0f*green_light_color);
            }
         }
-        else if (kernel){
-            for (int i = 0; i < shaders.size(); i++){
-                shaders[i]->use();
-                shaders[i]->setBool("use_kernel", true);
-           }
-        }
         else{
             for (int i = 0; i < shaders.size(); i++){
                 shaders[i]->use();
+                shaders[i]->setBool("use_nvg", false);
                 shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
                 shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
 
@@ -373,7 +367,7 @@ int main () {
         // Draws the player
         import_shader.use();
         import_shader.setVec4("direction_light.ambient", glm::vec4(0.0, 0.0, 1.0, 1.0));
-        player.Draw(&import_shader, nvg);
+        player.Draw(import_shader, nvg);
         
         // Draws the bullet and updates its position
         if (shot_out){
@@ -481,9 +475,6 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
     }
     if(glfwGetKey(window, GLFW_KEY_N)==GLFW_PRESS && nvg){
         nvg = false;
-    }
-    if(glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS){
-        kernel = true;
     }
 }
 
