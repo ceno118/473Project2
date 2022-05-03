@@ -258,7 +258,7 @@ int main () {
         shaders[i]->setVec4("spot_light.ambient", 0.5f*dir_light_color);
         shaders[i]->setVec4("spot_light.diffuse",0.1f*dir_light_color);
         shaders[i]->setVec4("spot_light.specular",0.1f*dir_light_color);
-        shaders[i]->setFloat("constant", 1.0);
+        shaders[i]->setFloat("constant", 10000000.0);
         shaders[i]->setFloat("linear", 0);
         shaders[i]->setFloat("quadratic", 0);
         shaders[i]->setBool("spot_light.on",true);
