@@ -92,14 +92,7 @@ void main()
         -1, -1, -1
     );
     
-    vec3 sampleTex[9];
-    for(int i = 0; i < 9; i++)
-    {
-        sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
-    }
-    vec3 col = vec3(0.0);
-    for(int i = 0; i < 9; i++)
-        col += sampleTex[i] * kernel[i];
+    
     
     
     if (use_color){
@@ -135,21 +128,24 @@ void main()
                                         eye_position);
 
     }
-    
-        
-    if (use_texture && !use_kernel) {
-        FragColor = (point_light_vec + dir_light_vec + spot_light_vec) 
+    vec3 sampleTex[9];
+    for(int i = 0; i < 9; i++)
+    {
+        //sampleTex[i] = vec4(texture(a_texture, texture_coordinates + offsets[i]));
+        sampleTex[i] = vec4(point_light_vec + dir_light_vec + spot_light_vec) 
                 * texture(a_texture, texture_coordinates);
-        return;
     }
-    else if (use_texture && use_kernel){
+    vec4 col = vec4(0.0, 0.0, 0.0, 1.0);
+    for(int i = 0; i < 9; i++)
+        col += sampleTex[i] * kernel[i];
+        
+    if (!use_kernel) {
         FragColor = (point_light_vec + dir_light_vec + spot_light_vec) 
-                * texture(a_texture, texture_coordinates) * vec4(col, 1.0);
+                * texture(a_texture, texture_coordinates)
         return;
     }
-
     else if (use_kernel){
-        FragColor = (point_light_vec+dir_light_vec+spot_light_vec) * vec4(col, 1.0);
+        FragColor =  col;
         return;
     }
     
