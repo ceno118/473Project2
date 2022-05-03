@@ -29,6 +29,7 @@ bool third_cam = true;
 bool first_cam = false;
 bool shot_out = false;
 bool nvg = false;
+bool kernel = false;
 float rotation_x = 0.0;
 float rotation_z = 90.0;
 
@@ -268,11 +269,17 @@ int main () {
         //input
         processInput(window, &player, import_vao, importer, bullet);
 
-         if (nvg){
+        if (nvg){
            for (int i = 0; i < shaders.size(); i++){
                 shaders[i]->use();
                 shaders[i]->setVec4("direction_light.ambient", 0.6f*green_light_color); 
                 shaders[i]->setVec4("ambient", 2.0f*green_light_color);
+           }
+        }
+        else if (kernel){
+            for (int i = 0; i < shaders.size(); i++){
+                shaders[i]->use();
+                shaders[i]->setBool("use_kernel", true);
            }
         }
         else{
@@ -473,6 +480,9 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
     }
     if(glfwGetKey(window, GLFW_KEY_N)==GLFW_PRESS && nvg){
         nvg = false;
+    }
+    if(glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS){
+        kernel = true;
     }
 }
 

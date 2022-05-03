@@ -10,6 +10,7 @@ in vec3 spec_color_vec;
 
 uniform bool use_color;
 uniform vec4 set_color;
+uniform bool use_kernel;
 
 uniform vec4 eye_position;
 
@@ -73,10 +74,38 @@ float Attenuate(float distance, float constant, float linear, float quadratic);
 
 void main()
 {
-    if (use_color)
+    
+    vec2 offsets[9] = vec2[](
+        vec2(-offset,  offset), // top-left
+        vec2( 0.0f,    offset), // top-center
+        vec2( offset,  offset), // top-right
+        vec2(-offset,  0.0f),   // center-left
+        vec2( 0.0f,    0.0f),   // center-center
+        vec2( offset,  0.0f),   // center-right
+        vec2(-offset, -offset), // bottom-left
+        vec2( 0.0f,   -offset), // bottom-center
+        vec2( offset, -offset)  // bottom-right    
+    );
+
+    float kernel[9] = float[](
+        -1, -1, -1,
+        -1,  9, -1,
+        -1, -1, -1
+    );
+    
+    vec3 sampleTex[9];
+    for(int i = 0; i < 9; i++)
     {
-    FragColor = set_color;
-    return;
+        sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
+    }
+    vec3 col = vec3(0.0);
+    for(int i = 0; i < 9; i++)
+        col += sampleTex[i] * kernel[i];
+    
+    
+    if (use_color){
+        FragColor = set_color;
+        return;
     }
     material.ambient = vec4(color_vec,1.0);
     material.diffuse = vec4(color_vec,1.0);
@@ -109,13 +138,23 @@ void main()
     }
     
         
-    if (use_texture) {
+    if (use_texture && !use_kernel) {
         FragColor = (point_light_vec + dir_light_vec + spot_light_vec) 
                 * texture(a_texture, texture_coordinates);
         return;
     }
+    else if (use_texture && use_kernel){
+        FragColor = (point_light_vec + dir_light_vec + spot_light_vec) 
+                * texture(a_texture, texture_coordinates) * vec4(col, 1.0);
+        return;
+    }
 
-    FragColor = point_light_vec+dir_light_vec+spot_light_vec;
+    else if (use_kernel){
+        FragColor = (point_light_vec+dir_light_vec+spot_light_vec) * vec4(col, 1.0);
+        return;
+    }
+    
+    FragColor = (point_light_vec+dir_light_vec+spot_light_vec)
 
     
 }
