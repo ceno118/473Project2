@@ -282,18 +282,18 @@ int main () {
            for (int i = 0; i < shaders.size(); i++){
                 shaders[i]->use();
                 shaders[i]->setBool("use_nvg", true);
-                shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
-                shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
-                shaders[i]->setVec4("spot_light.ambient", 0.2f*dir_light_color);
+                // shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
+                // shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
+                // shaders[i]->setVec4("spot_light.ambient", 0.2f*dir_light_color);
            }
         }
         else{
             for (int i = 0; i < shaders.size(); i++){
                 shaders[i]->use();
                 shaders[i]->setBool("use_nvg", false);
-                shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
-                shaders[i]->setVec4("ambient", dir_light_color);
-                shaders[i]->setVec4("spot_light.ambient", 0.001f*dir_light_color);
+                // shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
+                // shaders[i]->setVec4("ambient", dir_light_color);
+                // shaders[i]->setVec4("spot_light.ambient", 0.001f*dir_light_color);
 
             }
         }
