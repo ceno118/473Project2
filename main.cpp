@@ -336,8 +336,8 @@ int main () {
             shaders[i]->use();
             shaders[i]->setMat4("view",view);
             shaders[i]->setVec4("eye_position",glm::vec4(camera.Position,1.0));
-            shaders[i]->setVec4("spot_light.position", glm::vec4(0.0, 0.0, 0.0, 1.0));
-            shaders[i]->setVec4("spot_light.direction", glm::vec4(1.0, 0.0, 0.0, 1.0));
+            shaders[i]->setVec4("spot_light.position", glm::vec4(camera.Position, 1.0));
+            shaders[i]->setVec4("spot_light.direction", glm::vec4(camera.Position, 1.0));
         }
 
         //Draws the maze
