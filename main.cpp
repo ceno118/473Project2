@@ -81,6 +81,7 @@ int main () {
     Shader texture_shader("./shaders/textureVertexShader.glsl","./shaders/textureFragmentShader.glsl");
     Shader skybox_shader("./shaders/skyboxVertexShader.glsl", "./shaders/skyboxFragmentShader.glsl");
     Shader font_program("./shaders/textureVertexShader.glsl", "./shaders/fontFragmentShader.glsl");
+    Shader basic_shader("./shaders/vertexShader.glsl", "./shaders/fragmentShader.glsl");
 
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
@@ -120,6 +121,12 @@ int main () {
     import_vao.attributes.push_back(import_color_attr);
     import_vao.attributes.push_back(import_spec_col_attr);
 
+
+    // VAO for 2D shapes
+    VAOStruct position_vao;
+    glGenVertexArrays(1,&(position_vao.id));
+    AttributePointer position_attr = BuildAttribute(3,GL_FLOAT,false,3*sizeof(float),0);
+    position_vao.attributes.push_back(position_attr);
 
     // SKYBOX
 
@@ -200,6 +207,8 @@ int main () {
     std::cout << "floor and walls ok" << std::endl;
     BasicShape targets = importer.loadFiles("./models/target2", import_vao);
     std::cout << "targets" << std::endl;
+
+    BasicShape hud_back = GetRectangle(texture_vao, glm::vec3(0,0,0), 1, 1);
 
     unsigned int wall_tex = GetTexture("./images/plywood.jpg");
     unsigned int floor_tex = GetTexture("./images/concrete.jpg");
@@ -403,6 +412,11 @@ int main () {
         snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
         
         if (hud){
+            basic_shader.use();
+            basic_shader.setVec4("offset_vec", glm::vec4(0.0));
+            basic_shader.setVec4("set_color", glm::vec4(1.0, 0.0, 0.0, 0.3));
+            hud_back.Draw();
+
             arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
             arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
 
@@ -416,18 +430,7 @@ int main () {
             }
         }
 
-        unsigned int rgba = 0xff0000ff; // red, no alpha
-        glBegin(GL_QUADS);
-        glColor4f(((rgba>>24)&0xff)/255.0f,
-                ((rgba>>16)&0xff)/255.0f, 
-                ((rgba>>8)&0xff)/255.0f,
-                (rgba&0xff)/255.0f);
-        glVertex3f(0,0,0);
-        glVertex3f(50,0,0);
-        glVertex3f(50,50,0);
-        glVertex3f(0,50,0);
-        glEnd();
-        glColor4f(1, 1, 1, 1);
+        
 
 
         glfwSwapBuffers(window);
