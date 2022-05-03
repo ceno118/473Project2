@@ -139,12 +139,12 @@ void main()
     for(int i = 0; i < 9; i++)
         col += sampleTex[i] * kernel[i];
         
-    if (!use_kernel) {
+    if (use_texture) {
         FragColor = (point_light_vec + dir_light_vec + spot_light_vec) 
                 * texture(a_texture, texture_coordinates)
         return;
     }
-    else if (use_kernel){
+    else if (use_texture && use_kernel){
         FragColor =  col;
         return;
     }
