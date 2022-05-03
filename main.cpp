@@ -208,7 +208,7 @@ int main () {
     BasicShape targets = importer.loadFiles("./models/target2", import_vao);
     std::cout << "targets" << std::endl;
 
-    BasicShape hud_back = GetRectangle(texture_vao, glm::vec3(0,0,0), 1, 1);
+    BasicShape hud_back = GetRectangle(texture_vao, glm::vec3(0,0,0), 100, 100);
 
     unsigned int wall_tex = GetTexture("./images/plywood.jpg");
     unsigned int floor_tex = GetTexture("./images/concrete.jpg");
@@ -414,7 +414,7 @@ int main () {
         if (hud){
             texture_shader.use();
             texture_shader.setBool("use_color", true);
-            texture_shader.setVec4("set_color", glm::vec4(1.0, 0.0, 0.0, 0.3));
+            texture_shader.setVec4("set_color", glm::vec4(1.0));
             hud_back.Draw();
 
             arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
