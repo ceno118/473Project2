@@ -45,6 +45,8 @@ int screen_height = 600;
 double lastX = screen_width/2.0;
 double lastY = screen_height/2.0;
 
+glm::vec4 offset_vec(0.0,0.0,0.0,0.0);
+glm::vec4 clear_color(0.0,0.0,0.0,1.0);
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 unsigned int loadCubemap(vector<std::string> faces);
@@ -412,10 +414,6 @@ int main () {
         snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
         
         if (hud){
-            texture_shader.use();
-            texture_shader.setBool("use_color", true);
-            texture_shader.setVec4("set_color", glm::vec4(1.0));
-            hud_back.Draw();
 
             arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
             arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
@@ -430,8 +428,17 @@ int main () {
             }
         }
 
-        
+        glClearColor(clear_color.r,clear_color.g,clear_color.b,clear_color.a);
 
+
+        //clear the color buffer (where things are drawn) using the current clear color.
+        glClear(GL_COLOR_BUFFER_BIT);
+        glPointSize(3.0);
+
+        basic_shader.use();
+        basic_shader.setVec4("offset_vec", glm::vec4(0.0));
+        basic_shader.setVec4("set_color", glm::vec4(1.0));
+        hud_back.Draw();
 
         glfwSwapBuffers(window);
 
