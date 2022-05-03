@@ -72,7 +72,7 @@ int main () {
     unsigned int floor_texture = GetTexture("./images/hull_texture.png");
 
     glm::vec4 dir_light_color = glm::vec4(1.0,1.0,1.0,1.0);
-    glm::vec4 dir_light_direction = glm::vec4(1.0,-1.0,0.0,0.0);
+    glm::vec4 dir_light_direction = glm::vec4(0.5,-1.0,0.0,0.0);
     glm::vec4 green_light_color = glm::vec4(0.0, 1.0, 0.0, 1.0);
     Font arialFont("fonts/ArialBlackLarge.bmp","fonts/ArialBlack.csv", 0.3, 0.4);
 
@@ -247,20 +247,20 @@ int main () {
         // ambient light
         
         shaders[i]->setVec4("direction_light.direction",dir_light_direction);
-        shaders[i]->setVec4("direction_light.ambient",0.3f*dir_light_color);
+        shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
         shaders[i]->setVec4("direction_light.diffuse",dir_light_color);
         shaders[i]->setVec4("direction_light.specular",dir_light_color);
         shaders[i]->setBool("direction_light.on",true);
         shaders[i]->setVec4("spot_light.position", glm::vec4(camera.Position, 1.0));
         shaders[i]->setVec4("spot_light.direction", glm::vec4(camera.Front, 1.0));
-        shaders[i]->setFloat("spot_light.cutoff", glm::cos(glm::radians(12.5f)));
-        shaders[i]->setFloat("spot_light.outer_cutoff", glm::cos(glm::radians(15.0f)));
-        shaders[i]->setVec4("spot_light.ambient", 0.5f*dir_light_color);
-        shaders[i]->setVec4("spot_light.diffuse",0.1f*dir_light_color);
-        shaders[i]->setVec4("spot_light.specular",0.1f*dir_light_color);
+        shaders[i]->setFloat("spot_light.cutoff", glm::cos(glm::radians(8.5f)));
+        shaders[i]->setFloat("spot_light.outer_cutoff", glm::cos(glm::radians(12.5f)));
+        shaders[i]->setVec4("spot_light.ambient", dir_light_color);
+        shaders[i]->setVec4("spot_light.diffuse",dir_light_color);
+        shaders[i]->setVec4("spot_light.specular",dir_light_color);
         shaders[i]->setFloat("spot_light.constant", 1.0f);
-        shaders[i]->setFloat("spot_light.linear", 0.7f);
-        shaders[i]->setFloat("spot_light.quadratic", 1.8f);
+        shaders[i]->setFloat("spot_light.linear", 0.045f);
+        shaders[i]->setFloat("spot_light.quadratic", 0.0075f);
         shaders[i]->setBool("spot_light.on",true);
     }
 
@@ -336,8 +336,8 @@ int main () {
             shaders[i]->use();
             shaders[i]->setMat4("view",view);
             shaders[i]->setVec4("eye_position",glm::vec4(camera.Position,1.0));
-            shaders[i]->setVec4("spot_light.position", glm::vec4(camera.Position, 1.0));
-            shaders[i]->setVec4("spot_light.direction", glm::vec4(camera.Position, 1.0));
+            shaders[i]->setVec4("spot_light.position", glm::vec4(player.getLocation().x, player.getLocation().y + 1, player.getLocation().z, 1.0));
+            shaders[i]->setVec4("spot_light.direction", glm::vec4(1*(glm::cos(glm::radians(player_pointer->angle_z))), 0, -1*(glm::sin(glm::radians(player_pointer->angle_z))), 1.0f));
         }
 
         //Draws the maze
