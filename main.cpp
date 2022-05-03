@@ -255,6 +255,12 @@ int main () {
         shaders[i]->setVec4("spot_light.direction", glm::vec4(camera.Front, 1.0));
         shaders[i]->setFloat("spot_light.cutoff", glm::cos(glm::radians(12.5f)));
         shaders[i]->setFloat("spot_light.outer_cutoff", glm::cos(glm::radians(20.0f)));
+        shaders[i]->setVec4("spot_light.ambient", 0.5f*dir_light_color);
+        shaders[i]->setVec4("spot_light.diffuse",dir_light_color);
+        shaders[i]->setVec4("spot_light.specular",dir_light_color);
+        shaders[i]->setFloat("constant", 1.0);
+        shaders[i]->setFloat("linear", 1.0);
+        shaders[i]->setFloat("quadratic", 1.0);
         shaders[i]->setBool("spot_light.on",true);
     }
 
@@ -278,6 +284,7 @@ int main () {
                 shaders[i]->setBool("use_nvg", true);
                 shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
                 shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
+                shaders[i]->setVec4("spot_light.ambient", 0.2f*dir_light_color);
            }
         }
         else{
@@ -286,6 +293,7 @@ int main () {
                 shaders[i]->setBool("use_nvg", false);
                 shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
                 shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
+                shaders[i]->setVec4("spot_light.ambient", 0.2f*dir_light_color);
 
             }
         }
@@ -417,6 +425,9 @@ int main () {
             else{
                 arialFont.DrawText("View: default", glm::vec2(-3, 1.5), font_program);
             }
+            
+            
+            //arialFont.DrawText()
         }
 
 
