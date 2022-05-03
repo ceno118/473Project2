@@ -114,12 +114,15 @@ void main()
                 * texture(a_texture, texture_coordinates);
         return;
     }
-    else if (use_texture){
+    else if (use_texture && use_nvg){
         FragColor = (point_light_vec + dir_light_vec + spot_light_vec) 
                 * texture(a_texture, texture_coordinates) * vec4(0.0, 1.0, 0.0, 1.0);
         return;
     }
+    else if (use_nvg){
+        FragColor = (point_light_vec+dir_light_vec+spot_light_vec) * vec4(0.0, 1.0, 0.0, 1.0);
 
+    }
     FragColor = point_light_vec+dir_light_vec+spot_light_vec;
 
     

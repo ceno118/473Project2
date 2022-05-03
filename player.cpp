@@ -37,9 +37,9 @@ void Player::Draw(Shader shader, bool nvg){
     if (nvg) {
         shader.setBool("use_nvg", true);
     }
-    else {
-        shader . setVec4("direction_light.ambient", glm::vec4(0.3, 0.3, 0.3, 1.0));
-    }
+    // else {
+    //     shader.setVec4("direction_light.ambient", glm::vec4(0.3, 0.3, 0.3, 1.0));
+    // }
     this->shape.Draw();
 
 }

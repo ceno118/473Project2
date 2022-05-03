@@ -275,6 +275,8 @@ int main () {
                 // shaders[i]->setVec4("direction_light.ambient", 0.6f*green_light_color); 
                 // shaders[i]->setVec4("ambient", 2.0f*green_light_color);
                 shaders[i]->setBool("use_nvg", true);
+                shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
+                shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
            }
         }
         else{
