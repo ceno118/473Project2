@@ -35,7 +35,7 @@ void Player::Draw(Shader shader, bool nvg){
     shader.setMat4("model", player_model);
     shader.setMat4("transform", glm::mat4(1.0));
     if (nvg) {
-        shader.setVec4("direction_light.ambient", glm::vec4(0.0, 1.0, 0.0, 1.0));
+        shader.setBool("use_nvg", true);
     }
     else {
         shader . setVec4("direction_light.ambient", glm::vec4(0.3, 0.3, 0.3, 1.0));

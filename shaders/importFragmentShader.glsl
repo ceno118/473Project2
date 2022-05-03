@@ -10,7 +10,7 @@ in vec3 spec_color_vec;
 
 uniform bool use_color;
 uniform vec4 set_color;
-uniform bool use_kernel;
+uniform bool use_nvg;
 
 uniform vec4 eye_position;
 
@@ -109,9 +109,14 @@ void main()
     }
     
         
-    if (use_texture) {
+    if (use_texture && !use_nvg) {
         FragColor = (point_light_vec + dir_light_vec + spot_light_vec) 
                 * texture(a_texture, texture_coordinates);
+        return;
+    }
+    else if (use_texture){
+        FragColor = (point_light_vec + dir_light_vec + spot_light_vec) 
+                * texture(a_texture, texture_coordinates) * vec4(0.0, 1.0, 0.0, 1.0);
         return;
     }
 

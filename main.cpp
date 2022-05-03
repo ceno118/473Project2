@@ -272,8 +272,9 @@ int main () {
         if (nvg){
            for (int i = 0; i < shaders.size(); i++){
                 shaders[i]->use();
-                shaders[i]->setVec4("direction_light.ambient", 0.6f*green_light_color); 
-                shaders[i]->setVec4("ambient", 2.0f*green_light_color);
+                // shaders[i]->setVec4("direction_light.ambient", 0.6f*green_light_color); 
+                // shaders[i]->setVec4("ambient", 2.0f*green_light_color);
+                shaders[i]->setBool("use_nvg", true);
            }
         }
         else{
