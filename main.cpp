@@ -412,9 +412,9 @@ int main () {
         snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
         
         if (hud){
-            basic_shader.use();
-            basic_shader.setVec4("offset_vec", glm::vec4(0.0));
-            basic_shader.setVec4("set_color", glm::vec4(1.0, 0.0, 0.0, 0.3));
+            texture_shader.use();
+            texture_shader.setBool("use_color", true);
+            texture_shader.setVec4("set_color", glm::vec4(1.0, 0.0, 0.0, 0.3));
             hud_back.Draw();
 
             arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
