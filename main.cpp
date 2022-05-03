@@ -472,7 +472,7 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
         third_cam = false;
         top_cam = false;
     }
-    if(glfwGetKey(window, GLFW_MOUSE_BUTTON_LEFT)==GLFW_PRESS && !shot_out){
+    if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT)==GLFW_PRESS && !shot_out){
         bullet.Shoot(player->location, player->angle_z);
         shot_out = true;
     }
