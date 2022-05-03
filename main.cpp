@@ -252,7 +252,10 @@ int main () {
         shaders[i]->setVec4("direction_light.specular",dir_light_color);
         shaders[i]->setBool("direction_light.on",true);
         shaders[i]->setVec4("spot_light.position", glm::vec4(player.getLocation().x, player.getLocation().y + 0.8, player.getLocation().z, 1.0));
-        shaders[i]->setBool("spot_light.on",false);
+        shaders[i]->setVec4("spot_light.direction", glm::vec4((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2.3, (sin(glm::radians(-1*(player_pointer->angle_z)))), 1.0));
+        shaders[i]->setFloat("spot_light.cutoff", glm::cos(glm::radians(12.5f)));
+        shaders[i]->setFloat("spot_light.outer_cutoff", glm::cos(glm::radians(20.0f)));
+        shaders[i]->setBool("spot_light.on",true);
     }
 
     glEnable(GL_DEPTH_TEST);
