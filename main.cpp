@@ -10,48 +10,53 @@
 #include "bullet.hpp"
 #include "maze.hpp"
 #include "stb_image.h"
-
 #include <chrono>
 #include <ctime>
 #include <vector>
-
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <map>
+
 //Processes user input (keyboard currently).
 //Receives a GLFWwindow pointer as input.
-void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, ImportOBJ importer, Bullet bullet);
+void processInput(GLFWwindow *window, Player* player, Bullet bullet);
 
-//Global Variables
+//
+// GLOBAL VARIABLES
+//
 
+// Camera Selection
 bool top_cam = false;
 bool third_cam = true;
 bool first_cam = false;
 bool shot_out = false;
+
+// Post-Processing/Lighting
 bool nvg = false;
-bool gameover = false;
 bool spotlight_on = false;
 bool light_pressed = false;
-float rotation_x = 0.0;
-float rotation_z = 90.0;
 
+// Show HUD
 bool hud = true;
 bool hud_pressed = false;
 
+// Stops Timer
+bool gameover = false;
+
+// Camera
 Camera  camera(glm::vec3(2.0,3.0,7.0),glm::vec3(0.0,1.0,0.0),0.0f,-25.0f);
 Camera  *curr_camera = &camera;
 
-
-bool first_mouse = true;
+// Window Variables
 int screen_width = 600;
 int screen_height = 600;
 double lastX = screen_width/2.0;
 double lastY = screen_height/2.0;
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+// Initialization of function to load skybox
 unsigned int loadCubemap(vector<std::string> faces);
 
+// Vectors for the location of each target and a vector to hold them.
 glm::vec3 target0 = {-6.4, -1.2, 6.17};
 glm::vec3 target1 = {-5.2, -1.2, -5.9};
 glm::vec3 target2 = {-2.4, -1.2, 2.37};
@@ -59,11 +64,11 @@ glm::vec3 target3 = {2.97, -1.2, -0.2};
 glm::vec3 target4 = {2.09, -1.2, -4.6};
 glm::vec3 target5 = {0.28, -1.2, 1.75};
 glm::vec3 target6 = {-2.4, -1.2, -5.7};
-
 std::vector<glm::vec3> target_locs;
 
-
+// Initial view matrix to be transformed.
 glm::mat4 view = glm::mat4(1.0);
+
 int main () {
     
     GLFWwindow *window = InitializeEnvironment("LearnOpenGL",screen_width,screen_height);
@@ -71,6 +76,11 @@ int main () {
         return -1;
     }
 
+    //
+    // SETUP
+    //
+
+    // Fills target location vector with data.
     target_locs.push_back(target0);
     target_locs.push_back(target1);
     target_locs.push_back(target2);
@@ -79,28 +89,30 @@ int main () {
     target_locs.push_back(target5);
     target_locs.push_back(target6);
     
+    // Finds the time the program was started.
     auto start_time = std::chrono::system_clock::now();
     
+    // Variables to control lighting
     float ambient_strength = 0.3;
     glm::vec4 light_color = glm::vec4(1.0);
     glm::vec4 light_position = glm::vec4(0.0, 10.0, 0.0, 1.0);
+    glm::vec4 dir_light_color = glm::vec4(1.0,1.0,1.0,1.0);
+    glm::vec4 dir_light_direction = glm::vec4(0.5,-1.0,0.0,0.0);
+    glm::vec4 green_light_color = glm::vec4(0.0, 1.0, 0.0, 1.0);
+
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
-    glfwSetCursorPosCallback(window, mouse_callback);  
 
     //Blending....dealing with the alpha channel for transparency.
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    unsigned int floor_texture = GetTexture("./images/hull_texture.png");
 
-    glm::vec4 dir_light_color = glm::vec4(1.0,1.0,1.0,1.0);
-    glm::vec4 dir_light_direction = glm::vec4(0.5,-1.0,0.0,0.0);
-    glm::vec4 green_light_color = glm::vec4(0.0, 1.0, 0.0, 1.0);
+    // Creates a usable font for text rendering
     Font arialFont("fonts/ArialBlackLarge.bmp","fonts/ArialBlack.csv", 0.3, 0.4);
 
+    // Creates shaders for different objects and one for text rendering.
     Shader import_shader("./shaders/importVertexShader.glsl","./shaders/importFragmentShader.glsl");
-    Shader texture_shader("./shaders/textureVertexShader.glsl","./shaders/textureFragmentShader.glsl");
     Shader skybox_shader("./shaders/skyboxVertexShader.glsl", "./shaders/skyboxFragmentShader.glsl");
     Shader font_program("./shaders/textureVertexShader.glsl", "./shaders/fontFragmentShader.glsl");
 
@@ -109,9 +121,8 @@ int main () {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
  
-    //Vertex Array Object for textured VBOs
-    //Each vertex has a position (x,y,z), texture coordinate (s, t), and 
-    // a surface normal (sx, sy, sz)
+    // Vertex Array Object for textured VBOs
+    // Only used for text rendering in this program
     VAOStruct texture_vao;
     glGenVertexArrays(1,&(texture_vao.id));
     AttributePointer texture_pos_attr = BuildAttribute(3,GL_FLOAT,false,8*sizeof(float),0);
@@ -121,14 +132,10 @@ int main () {
     texture_vao.attributes.push_back(texture_attr);
     texture_vao.attributes.push_back(normal_attr);
 
-    arialFont.initialize(texture_vao);
 
-    //Vertex Array Object for imported VBOs
+    // Vertex Array Object for imported VBOs
+    // Maze, Player, Bullet
     VAOStruct import_vao;
-    //Each vertex has a position (x,y,z), surface normal (sx,sy,sz)
-    // texture coordinate (s, t), color attribute (r,g,b), 
-    // and a specular color (r,g,b)
-    
     glGenVertexArrays(1,&(import_vao.id));
     AttributePointer import_pos_attr = BuildAttribute(3,GL_FLOAT,false,14*sizeof(float),0);
     AttributePointer import_norm_attr = BuildAttribute(3,GL_FLOAT,false,14*sizeof(float),3*sizeof(float));
@@ -142,10 +149,8 @@ int main () {
     import_vao.attributes.push_back(import_spec_col_attr);
 
 
-    // SKYBOX
-
+    // Vertices to render the skybox
     float skyboxVertices[] = {
-    // positions
     -1.0f,  1.0f, -1.0f,
     -1.0f, -1.0f, -1.0f,
     1.0f, -1.0f, -1.0f,
@@ -188,6 +193,7 @@ int main () {
     -1.0f, -1.0f,  1.0f,
     1.0f, -1.0f,  1.0f
 };
+    // Collection of images that make up the skybox
     vector<std::string> faces{
         "./images/right.jpg",
         "./images/left.jpg",
@@ -197,6 +203,7 @@ int main () {
         "./images/back.jpg"
     };
 
+    // VAO and VBO to render skybox
     unsigned int skyboxVAO, skyboxVBO;
     glGenVertexArrays(1, &skyboxVAO);
     glGenBuffers(1, &skyboxVBO);
@@ -206,46 +213,40 @@ int main () {
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-    unsigned int cubemapTexture = loadCubemap(faces, false);
     
     
-    //Create an import object to import different blender-generated shapes
     
+    // Create an import object to import different blender-generated shapes
     ImportOBJ importer;
 
-    // BasicShape floor = importer.loadFiles()
-
+    // Imports blender objects and initializes them as loadable shapes
     BasicShape floor = importer.loadFiles("./models/floor", import_vao);
-    std::cout << "here2" << std::endl;
     BasicShape walls = importer.loadFiles("./models/walls", import_vao);
-    std::cout << "floor and walls ok" << std::endl;
     BasicShape targets = importer.loadFiles("./models/target2", import_vao);
-    std::cout << "targets" << std::endl;
+    
+    // Uses Player class to create player object
+    Player player(importer.loadFiles("./models/low_poly", import_vao));
+    Player* player_pointer = &player;
+    
+    // Uses Bullet class to create bullet object
+    Bullet bullet(importer.loadFiles("./models/bullet", import_vao), &player);
+    Bullet* bullet_pointer = &bullet;
+    
+    // Initializes font so we can use it to render text
+    arialFont.initialize(texture_vao);
 
+    // Loads textures for skybox and maze
+    unsigned int cubemapTexture = loadCubemap(faces, false);
     unsigned int wall_tex = GetTexture("./images/plywood.jpg");
     unsigned int floor_tex = GetTexture("./images/concrete.jpg");
     unsigned int target_tex = GetTexture("./images/target5.png");
 
-    //Maze maze(walls, floor, targets, wall_tex, floor_tex, target_tex);
-    std::cout << "makes the maze" << std::endl;
-
-    // BasicShape* mazepointer = &maze;
-    Player player(importer.loadFiles("./models/low_poly", import_vao));
-    Player* player_pointer = &player;
-    Bullet bullet(importer.loadFiles("./models/bullet", import_vao), &player);
-    Bullet* bullet_pointer = &bullet;
-
-    //Model Location, Scale, and Textures:
-
-    //Set up initial transformations.
-    glm::mat4 model = glm::mat4(1.0);
-    model = glm::rotate(model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
+    //
+    // Set up initial transformations for shaders
+    //
     
-    view = glm::translate(view,glm::vec3(0.0,0.0,-5.0));
-    glm::mat4 project = glm::mat4(1.0);
-    project = glm::perspective(glm::radians(45.0f),(1.0f*screen_width)/(1.0f*screen_height),0.1f,100.0f);
-
-    // FONT PROGRAM
+    
+    // Font Program
     font_program.use();
     font_program.setMat4("view",glm::mat4(1.0));
     font_program.setMat4("model",glm::mat4(1.0));
@@ -254,7 +255,13 @@ int main () {
     font_program.setVec4("transparentColor", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
     font_program.setFloat("alpha", 0);
     font_program.setInt("texture1", 0);
-    
+
+    // Shaders
+    glm::mat4 model = glm::mat4(1.0);
+    model = glm::rotate(model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
+    view = glm::translate(view,glm::vec3(0.0,0.0,-5.0));
+    glm::mat4 project = glm::mat4(1.0);
+    project = glm::perspective(glm::radians(45.0f),(1.0f*screen_width)/(1.0f*screen_height),0.1f,100.0f);
     
     std::vector<Shader*> shaders {&import_shader, &skybox_shader};
     for (int i = 0; i < shaders.size(); i++)
@@ -265,15 +272,17 @@ int main () {
         shaders[i]->setMat4("view",view);
         shaders[i]->setMat4("projection",project);
         shaders[i]->setBool("point_light.on",false);
-        shaders[i]->setBool("use_nvg", false);
-
-        // ambient light
         
+        shaders[i]->setBool("use_nvg", false); // Bool for post-processing
+
+        // Direction Light setup
         shaders[i]->setVec4("direction_light.direction",dir_light_direction);
         shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
         shaders[i]->setVec4("direction_light.diffuse",dir_light_color);
         shaders[i]->setVec4("direction_light.specular",dir_light_color);
         shaders[i]->setBool("direction_light.on",true);
+
+        // Spotlight setup
         shaders[i]->setVec4("spot_light.position", glm::vec4(camera.Position, 1.0));
         shaders[i]->setVec4("spot_light.direction", glm::vec4(camera.Front, 1.0));
         shaders[i]->setFloat("spot_light.cutoff", glm::cos(glm::radians(8.5f)));
@@ -293,21 +302,19 @@ int main () {
     //  window has been set to close (does this each iteration)
     std::cout << "gets to render" << std::endl;
     while (!glfwWindowShouldClose(window)) {
-        // updates player position and angle based on input
+        
+        // Checks for user input for player movement, shooting,
+        // camera changes, post-processing, and lighting changes.
         player.process_input(window, top_cam);
-        
-        
-        
-        //input
-        processInput(window, &player, import_vao, importer, bullet);
+        processInput(window, &player, bullet);
 
+        // Checks for post-processing boolean
         if (nvg){
            for (int i = 0; i < shaders.size(); i++){
                 shaders[i]->use();
                 shaders[i]->setBool("use_nvg", true);
                 shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
                 shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
-                // shaders[i]->setVec4("spot_light.ambient", 0.2f*dir_light_color);
            }
         }
         else{
@@ -316,8 +323,6 @@ int main () {
                 shaders[i]->setBool("use_nvg", false);
                 shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
                 shaders[i]->setVec4("ambient", dir_light_color);
-                // shaders[i]->setVec4("spot_light.ambient", 0.001f*dir_light_color);
-
             }
         }
         
@@ -502,7 +507,7 @@ int main () {
 
 }
 
-void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, ImportOBJ importer, Bullet bullet)
+void processInput(GLFWwindow *window, Player* player, Bullet bullet)
 {
     // sets camera type and fires a bullet based on input
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -555,20 +560,4 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
     if(glfwGetKey(window, GLFW_KEY_F)==GLFW_RELEASE && light_pressed){
         light_pressed = false;
     }
-}
-
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    if (first_mouse) {
-        first_mouse = false;
-        lastX = xpos;
-        lastY = ypos;
-    }
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos;
-    lastX = xpos;
-    lastY = ypos;
-
-    curr_camera->ProcessMouseMovement(xoffset,yoffset,true);
-
 }
