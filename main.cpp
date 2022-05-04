@@ -628,13 +628,14 @@ void drawSkybox(Shader skybox_shader, unsigned int cubemapTexture, unsigned int 
 void drawHUD(Shader font_program, Font arialFont, std::chrono::_V2::system_clock::time_point start_time){
     char elapsed_time[6];
     auto curr_time = std::chrono::system_clock::now();
+    if (target_locs.size() == 0){
+        gameover = true;
+    }
     if (!gameover){
         std::chrono::duration<double> time_passed = curr_time - start_time;
         snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
     }
-    if (target_locs.size() == 0){
-        gameover = true;
-    }
+    
     
     if (hud){
         arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
