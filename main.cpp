@@ -25,6 +25,7 @@ void checkBullet(bool shot_out, Bullet bullet);
 void checkCam(Player* player_pointer);
 void mazeDraw(BasicShape floor, BasicShape walls, BasicShape targets, 
     Shader import_shader, unsigned int floor_tex, unsigned int wall_tex, unsigned int target_tex);
+void drawSkybox(Shader skybox_shader, unsigned int cubemapTexture, unsigned int skyboxVAO);
 
 //
 // GLOBAL VARIABLES
@@ -71,8 +72,9 @@ glm::vec3 target5 = {0.28, -1.2, 1.75};
 glm::vec3 target6 = {-2.4, -1.2, -5.7};
 std::vector<glm::vec3> target_locs;
 
-// Initial view matrix to be transformed.
+// Initial view/project matrix to be transformed.
 glm::mat4 view = glm::mat4(1.0);
+glm::mat4 project = glm::mat4(1.0);
 
 int main () {
     
@@ -265,7 +267,7 @@ int main () {
     glm::mat4 model = glm::mat4(1.0);
     model = glm::rotate(model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
     view = glm::translate(view,glm::vec3(0.0,0.0,-5.0));
-    glm::mat4 project = glm::mat4(1.0);
+    
     project = glm::perspective(glm::radians(45.0f),(1.0f*screen_width)/(1.0f*screen_height),0.1f,100.0f);
     
     std::vector<Shader*> shaders {&import_shader, &skybox_shader};
@@ -361,48 +363,11 @@ int main () {
         }
 
         //Draws the maze
-
         mazeDraw(floor, walls, targets, import_shader, floor_tex, wall_tex, target_tex);
-
-        // import_shader.use();
-        // import_shader.setMat4("transform", glm::mat4(1.0));
-        // glm::mat4 floor_model = glm::mat4(1.0);
-        // floor_model = glm::rotate(floor_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
-        // floor_model = glm::translate(floor_model, glm::vec3(0.0));
-        // floor_model = glm::scale(floor_model, glm::vec3(1.5));
-        // import_shader.setMat4("model", floor_model);
-        // import_shader.setBool("use_texture", true);
-        // glBindTexture(GL_TEXTURE_2D, floor_tex);
-        // import_shader.setMat4("transform", glm::mat4(1.0f));
-        // floor.Draw();
-
-        // import_shader.use();
-        // import_shader.setMat4("transform", glm::mat4(1.0));
-        // glm::mat4 walls_model = glm::mat4(1.0);
-        // walls_model = glm::rotate(walls_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
-        // walls_model = glm::translate(walls_model, glm::vec3(0.0));
-        // walls_model = glm::scale(walls_model, glm::vec3(1.5));
-        // import_shader.setMat4("model", walls_model);
-        // import_shader.setBool("use_texture", true);
-        // glBindTexture(GL_TEXTURE_2D, wall_tex);
-        // import_shader.setMat4("transform", glm::mat4(1.0f));
-        // walls.Draw();
-        
-        // import_shader.use();
-        // import_shader.setMat4("transform", glm::mat4(1.0));
-        // glm::mat4 targets_model = glm::mat4(1.0);
-        // targets_model = glm::rotate(targets_model,glm::radians(0.0f),glm::vec3(0.0,1.0,0.0));
-        // targets_model = glm::translate(targets_model, glm::vec3(0.0));
-        // targets_model = glm::scale(targets_model, glm::vec3(1.5));
-        // import_shader.setMat4("model", targets_model);
-        // import_shader.setBool("use_texture", true);
-        // glBindTexture(GL_TEXTURE_2D, target_tex);
-        // import_shader.setMat4("transform", glm::mat4(1.0f));
-        // targets.Draw();
+        // I wasn't able to get the maze to work as its own class, so I put the code to draw it
+        // in a function to clean up the loop
         
         // Draws the player
-        import_shader.use();
-        //import_shader.setVec4("direction_light.ambient", glm::vec4(0.0, 0.0, 1.0, 1.0));
         player.Draw(import_shader, nvg);
         
         // Draws the bullet and updates its position
@@ -411,21 +376,23 @@ int main () {
             bullet.Draw(&import_shader);
         }
         
-        skybox_shader.use();
-        glm::mat4 skybox_view = glm::mat4(glm::mat3(curr_camera -> GetViewMatrix()));
-        skybox_shader.setMat4("view", skybox_view);
-        skybox_shader.setMat4("projection", project);
+        drawSkybox(skybox_shader, cubemapTexture, skyboxVAO);
+        
+        // skybox_shader.use();
+        // glm::mat4 skybox_view = glm::mat4(glm::mat3(curr_camera -> GetViewMatrix()));
+        // skybox_shader.setMat4("view", skybox_view);
+        // skybox_shader.setMat4("projection", project);
 
-        glDepthFunc(GL_EQUAL);
+        // glDepthFunc(GL_EQUAL);
 
-        glBindVertexArray(skyboxVAO);
-        glActiveTexture(0);
-        skybox_shader.setInt("skybox", 0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-        skybox_shader.setVec4("direction_light.ambient", glm::vec4(1.0, 0.0, 0.0, 1.0));
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        glBindVertexArray(0);
-        glDepthFunc(GL_LESS);
+        // glBindVertexArray(skyboxVAO);
+        // glActiveTexture(0);
+        // skybox_shader.setInt("skybox", 0);
+        // glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+        // skybox_shader.setVec4("direction_light.ambient", glm::vec4(1.0, 0.0, 0.0, 1.0));
+        // glDrawArrays(GL_TRIANGLES, 0, 36);
+        // glBindVertexArray(0);
+        // glDepthFunc(GL_LESS);
 
         // HUD
         //https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
@@ -637,3 +604,21 @@ void mazeDraw(BasicShape floor, BasicShape walls, BasicShape targets,
         import_shader.setMat4("transform", glm::mat4(1.0f));
         targets.Draw();
     }
+
+void drawSkybox(Shader skybox_shader, unsigned int cubemapTexture, unsigned int skyboxVAO){
+    skybox_shader.use();
+    glm::mat4 skybox_view = glm::mat4(glm::mat3(curr_camera -> GetViewMatrix()));
+    skybox_shader.setMat4("view", skybox_view);
+    skybox_shader.setMat4("projection", project);
+
+    glDepthFunc(GL_EQUAL);
+
+    glBindVertexArray(skyboxVAO);
+    glActiveTexture(0);
+    skybox_shader.setInt("skybox", 0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+    skybox_shader.setVec4("direction_light.ambient", glm::vec4(1.0, 0.0, 0.0, 1.0));
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+    glDepthFunc(GL_LESS);
+}
