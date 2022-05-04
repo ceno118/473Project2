@@ -278,7 +278,7 @@ int main () {
         shaders[i]->setVec4("spot_light.direction", glm::vec4(camera.Front, 1.0));
         shaders[i]->setFloat("spot_light.cutoff", glm::cos(glm::radians(8.5f)));
         shaders[i]->setFloat("spot_light.outer_cutoff", glm::cos(glm::radians(12.5f)));
-        shaders[i]->setVec4("spot_light.ambient", dir_light_color);
+        shaders[i]->setVec4("spot_light.ambient", 0.2f*dir_light_color);
         shaders[i]->setVec4("spot_light.diffuse",dir_light_color);
         shaders[i]->setVec4("spot_light.specular",dir_light_color);
         shaders[i]->setFloat("spot_light.constant", 1.0f);
