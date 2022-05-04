@@ -13,6 +13,7 @@
 
 #include <chrono>
 #include <ctime>
+#include <vector>
 
 
 #include <glm/glm.hpp>
@@ -29,6 +30,7 @@ bool third_cam = true;
 bool first_cam = false;
 bool shot_out = false;
 bool nvg = false;
+bool gameover = false;
 float rotation_x = 0.0;
 float rotation_z = 90.0;
 
@@ -48,14 +50,15 @@ double lastY = screen_height/2.0;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 unsigned int loadCubemap(vector<std::string> faces);
 
-glm::vec3 target1 = {-6.4, -1.2, 6.17};
-glm::vec3 target2 = {-5.2, -1.2, -5.9};
-glm::vec3 target3 = {-2.4, -1.2, 2.37};
-glm::vec3 target4 = {2.97, -1.2, -0.2};
-glm::vec3 target5 = {2.09, -1.2, -4.6};
-glm::vec3 target6 = {0.28, -1.2, 1.75};
-glm::vec3 target7 = {-2.4, -1.2, -5.7};
+glm::vec3 target0 = {-6.4, -1.2, 6.17};
+glm::vec3 target1 = {-5.2, -1.2, -5.9};
+glm::vec3 target2 = {-2.4, -1.2, 2.37};
+glm::vec3 target3 = {2.97, -1.2, -0.2};
+glm::vec3 target4 = {2.09, -1.2, -4.6};
+glm::vec3 target5 = {0.28, -1.2, 1.75};
+glm::vec3 target6 = {-2.4, -1.2, -5.7};
 
+std::vector<glm::vec3> target_locs;
 
 
 glm::mat4 view = glm::mat4(1.0);
@@ -66,6 +69,14 @@ int main () {
         return -1;
     }
 
+    target_locs.push_back(target0);
+    target_locs.push_back(target1);
+    target_locs.push_back(target2);
+    target_locs.push_back(target3);
+    target_locs.push_back(target4);
+    target_locs.push_back(target5);
+    target_locs.push_back(target6);
+    
     auto start_time = std::chrono::system_clock::now();
     
     float ambient_strength = 0.3;
@@ -316,6 +327,17 @@ int main () {
         if (bullet_loc.x > 10 || bullet_loc.z > 10 || bullet_loc.x < -10 || bullet_loc.z < -10){
             bullet.Reset();
             shot_out = false;
+        }
+        for (int i = 0; i<target_locs.size(); i++){
+            float t_x = target_locs[i].x;
+            float t_y = target_locs[i].y;
+            float t_z = target_locs[i].z;
+
+            if (bullet_loc.x < t_x + 0.4 && bullet_loc.x > t_x - 0.4 && bullet_loc.z < t_z + 0.4 && bullet_loc.z > t_z - 0.4){
+                bullet.Reset();
+                shot_out = false;
+                target_locs.erase(target_locs.begin()+i);
+            }
         }      
 
         //set the clear color to  wipe the window
@@ -421,34 +443,48 @@ int main () {
         std::chrono::duration<double> time_passed = curr_time - start_time;
         char elapsed_time[6];
         snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
+
+        if (target_locs.size() == 0){
+            gameover = true;
+        }
         
         if (hud){
 
-            arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
-            arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
+            if (!gameover){
+                arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
+                arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
+            }
+            else {
+                char final_time[6];
+                snprintf(final_time, sizeof(final_time), "%f", curr_time);
+                arialFont.DrawText(final_time, glm::vec2(-2, 2.5), font_program);
+            }
 
-            arialFont.DrawText("Targets Remaining: 7", glm::vec2(-3, 2), font_program);
+            char targets_remaining[2];
+            snprintf(targets_remaining, sizeof(targets_remaining), "%f" , target_locs.size());
+            arialFont.DrawText("Targets Remaining: ", glm::vec2(-3, 2), font_program);
+            arialFont.DrawText(targets_remaining, glm::vec2(-2.5, 2), font_program);
 
             if (nvg){
                 arialFont.DrawText("View: NVG", glm::vec2(-3, 1.5), font_program);
             }
             else{
-                arialFont.DrawText("View: default", glm::vec2(-3, 1.5), font_program);
+                arialFont.DrawText("View: Default", glm::vec2(-3, 1.5), font_program);
             }
             
-            float p_x = player.getLocation().x;
-            float p_y = player.getLocation().y;
-            float p_z = player.getLocation().z;
+            // float p_x = player.getLocation().x;
+            // float p_y = player.getLocation().y;
+            // float p_z = player.getLocation().z;
 
-            char x[5];
-            char y[5];
-            char z[5];
-            snprintf(x, sizeof(x), "%f", p_x);
-            snprintf(y, sizeof(y), "%f", p_y);
-            snprintf(z, sizeof(z), "%f", p_z);
-            arialFont.DrawText(x, glm::vec2(-2.5, 1), font_program);
-            arialFont.DrawText(y, glm::vec2(-2.5, 0.5), font_program);
-            arialFont.DrawText(z, glm::vec2(-2.5, 0), font_program);
+            // char x[5];
+            // char y[5];
+            // char z[5];
+            // snprintf(x, sizeof(x), "%f", p_x);
+            // snprintf(y, sizeof(y), "%f", p_y);
+            // snprintf(z, sizeof(z), "%f", p_z);
+            // arialFont.DrawText(x, glm::vec2(-2.5, 1), font_program);
+            // arialFont.DrawText(y, glm::vec2(-2.5, 0.5), font_program);
+            // arialFont.DrawText(z, glm::vec2(-2.5, 0), font_program);
         }
 
 
