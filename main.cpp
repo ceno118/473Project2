@@ -31,7 +31,8 @@ bool first_cam = false;
 bool shot_out = false;
 bool nvg = false;
 bool gameover = false;
-bool spotlight_on;
+bool spotlight_on = false;
+bool light_pressed = false;
 float rotation_x = 0.0;
 float rotation_z = 90.0;
 
@@ -543,11 +544,16 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
     if(glfwGetKey(window, GLFW_KEY_N)==GLFW_PRESS && nvg){
         nvg = false;
     }
-    if(glfwGetKey(window, GLFW_KEY_F)==GLFW_PRESS && !spotlight_on){
+    if(glfwGetKey(window, GLFW_KEY_F)==GLFW_PRESS && !spotlight_on && !light_pressed){
         spotlight_on = true;
+        light_pressed = true;
     }
-    if(glfwGetKey(window, GLFW_KEY_F)==GLFW_PRESS && spotlight_on){
+    if(glfwGetKey(window, GLFW_KEY_F)==GLFW_PRESS && spotlight_on && !light_pressed){
         spotlight_on = false;
+        light_pressed = true;
+    }
+    if(glfwGetKey(window, GLFW_KEY_F)==GLFW_RELEASE && light_pressed){
+        light_pressed = false;
     }
 }
 
