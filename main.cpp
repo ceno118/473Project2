@@ -387,6 +387,7 @@ int main () {
         // I used https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
         // to learn about the std::chrono functions to create a timer.
         
+        // I wanted to implement this as a function but it crashed when the game ended.
         char elapsed_time[6];
         auto curr_time = std::chrono::system_clock::now();
         if (!gameover){
