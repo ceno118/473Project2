@@ -21,7 +21,7 @@
 //Receives a GLFWwindow pointer as input.
 void processInput(GLFWwindow *window, Player* player, Bullet bullet);
 void checkPost(bool nvg, std::vector<Shader*> shaders, glm::vec4 dir_light_color);
-void checkBullet(bool shot_out, Bullet bullet, std::vector<glm::vec3> target_locs);
+void checkBullet(bool shot_out, Bullet bullet);
 
 //
 // GLOBAL VARIABLES
@@ -315,7 +315,7 @@ int main () {
         
         // Checks if the bullet should be reset
         
-        checkBullet(shot_out, bullet, target_locs);
+        checkBullet(shot_out, bullet);
 
         // if (!shot_out){
         //     bullet.Reset();
@@ -571,7 +571,7 @@ void checkPost(bool nvg, std::vector<Shader*> shaders, glm::vec4 dir_light_color
         }
 }
 
-void checkBullet(bool shot_out, Bullet bullet, std::vector<glm::vec3> target_locs){
+void checkBullet(bool shot_out, Bullet bullet){
     if (!shot_out){
         bullet.Reset();
     }
