@@ -31,6 +31,7 @@ bool first_cam = false;
 bool shot_out = false;
 bool nvg = false;
 bool gameover = false;
+bool spotlight_on;
 float rotation_x = 0.0;
 float rotation_z = 90.0;
 
@@ -370,6 +371,12 @@ int main () {
             shaders[i]->setVec4("eye_position",glm::vec4(camera.Position,1.0));
             shaders[i]->setVec4("spot_light.position", glm::vec4(player.getLocation().x, player.getLocation().y + 1, player.getLocation().z, 1.0));
             shaders[i]->setVec4("spot_light.direction", glm::vec4(1*(glm::cos(glm::radians(player_pointer->angle_z))), 0, -1*(glm::sin(glm::radians(player_pointer->angle_z))), 1.0f));
+            if (spotlight_on){
+                shaders[i]->setBool("spot_light.on", true);
+            }
+            else {
+                shaders[i]->setBool("spot_light.on", false);
+            }
         }
 
         //Draws the maze
@@ -471,19 +478,6 @@ int main () {
                 arialFont.DrawText("View: Default", glm::vec2(-3, 1.5), font_program);
             }
             
-            // float p_x = player.getLocation().x;
-            // float p_y = player.getLocation().y;
-            // float p_z = player.getLocation().z;
-
-            // char x[5];
-            // char y[5];
-            // char z[5];
-            // snprintf(x, sizeof(x), "%f", p_x);
-            // snprintf(y, sizeof(y), "%f", p_y);
-            // snprintf(z, sizeof(z), "%f", p_z);
-            // arialFont.DrawText(x, glm::vec2(-2.5, 1), font_program);
-            // arialFont.DrawText(y, glm::vec2(-2.5, 0.5), font_program);
-            // arialFont.DrawText(z, glm::vec2(-2.5, 0), font_program);
         }
 
 
@@ -548,6 +542,12 @@ void processInput(GLFWwindow *window, Player* player, VAOStruct importVAO, Impor
     }
     if(glfwGetKey(window, GLFW_KEY_N)==GLFW_PRESS && nvg){
         nvg = false;
+    }
+    if(glfwGetKey(window, GLFW_KEY_F)==GLFW_PRESS && !spotlight_on){
+        spotlight_on = true;
+    }
+    if(glfwGetKey(window, GLFW_KEY_F)==GLFW_PRESS && spotlight_on){
+        spotlight_on = false;
     }
 }
 
