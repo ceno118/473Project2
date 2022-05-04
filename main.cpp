@@ -446,9 +446,9 @@ int main () {
             snprintf(x, sizeof(x), "%f", p_x);
             snprintf(y, sizeof(y), "%f", p_y);
             snprintf(z, sizeof(z), "%f", p_z);
-            arialFont.DrawText(x, glm::vec2(-3, 1), font_program);
-            arialFont.DrawText(y, glm::vec2(-3, 0.5), font_program);
-            arialFont.DrawText(z, glm::vec2(-3, 0), font_program);
+            arialFont.DrawText(x, glm::vec2(-2.5, 1), font_program);
+            arialFont.DrawText(y, glm::vec2(-2.5, 0.5), font_program);
+            arialFont.DrawText(z, glm::vec2(-2.5, 0), font_program);
         }
 
 
