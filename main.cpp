@@ -439,31 +439,30 @@ int main () {
 
         // HUD
         //https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
-        auto curr_time = std::chrono::system_clock::now();
-        std::chrono::duration<double> time_passed = curr_time - start_time;
         char elapsed_time[6];
-        snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
-
+        auto curr_time = std::chrono::system_clock::now();
+        if (!gameover){
+            
+            std::chrono::duration<double> time_passed = curr_time - start_time;
+            
+            snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
+        }
+        //char final_time[6];
         if (target_locs.size() == 0){
             gameover = true;
         }
         
         if (hud){
 
-            if (!gameover){
-                arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
-                arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
-            }
-            else {
-                char final_time[6];
-                snprintf(final_time, sizeof(final_time), "%f", curr_time);
-                arialFont.DrawText(final_time, glm::vec2(-2, 2.5), font_program);
-            }
+            
+            arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
+            arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
+        
 
-            char targets_remaining[2];
-            snprintf(targets_remaining, sizeof(targets_remaining), "%f" , target_locs.size());
-            arialFont.DrawText("Targets Remaining: ", glm::vec2(-3, 2), font_program);
-            arialFont.DrawText(targets_remaining, glm::vec2(-2.5, 2), font_program);
+            char targets_remaining[3];
+            snprintf(targets_remaining, sizeof(targets_remaining), "%d" , target_locs.size());
+            arialFont.DrawText("Targets Remaining:", glm::vec2(-3, 2), font_program);
+            arialFont.DrawText(targets_remaining, glm::vec2(-0.5, 2), font_program);
 
             if (nvg){
                 arialFont.DrawText("View: NVG", glm::vec2(-3, 1.5), font_program);
