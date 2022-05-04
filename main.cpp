@@ -48,13 +48,13 @@ double lastY = screen_height/2.0;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 unsigned int loadCubemap(vector<std::string> faces);
 
-float target1[] = {};
-float target2[] = {};
-float target3[] = {};
-float target4[] = {};
-float target5[] = {};
-float target6[] = {};
-float target7[] = {};
+glm::vec3 target1 = {-6.4, -1.2, 6.17};
+glm::vec3 target2 = {-5.2, -1.2, -5.9};
+glm::vec3 target3 = {-2.4, -1.2, 2.37};
+glm::vec3 target4 = {2.97, -1.2, -0.2};
+glm::vec3 target5 = {2.09, -1.2, -4.6};
+glm::vec3 target6 = {0.28, -1.2, 1.75};
+glm::vec3 target7 = {-2.4, -1.2, -5.7};
 
 
 
