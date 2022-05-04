@@ -48,6 +48,16 @@ double lastY = screen_height/2.0;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 unsigned int loadCubemap(vector<std::string> faces);
 
+float target1[] = {};
+float target2[] = {};
+float target3[] = {};
+float target4[] = {};
+float target5[] = {};
+float target6[] = {};
+float target7[] = {};
+
+
+
 glm::mat4 view = glm::mat4(1.0);
 int main () {
     
@@ -426,8 +436,19 @@ int main () {
                 arialFont.DrawText("View: default", glm::vec2(-3, 1.5), font_program);
             }
             
-            
-            //arialFont.DrawText()
+            float p_x = player.getLocation().x;
+            float p_y = player.getLocation().y;
+            float p_z = player.getLocation().z;
+
+            char x[5];
+            char y[5];
+            char z[5];
+            snprintf(x, sizeof(p_x), "%f", p_x);
+            snprintf(y, sizeof(p_y), "%f", p_y);
+            snprintf(z, sizeof(p_z), "%f", p_z);
+            arialFont.DrawText(x, glm::vec2(-3, 1), font_program);
+            arialFont.DrawText(y, glm::vec2(-3, 0.5), font_program);
+            arialFont.DrawText(y, glm::vec2(-3, 0), font_program);
         }
 
 
