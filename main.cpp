@@ -27,6 +27,7 @@ void checkCam(Player* player_pointer);
 void mazeDraw(BasicShape floor, BasicShape walls, BasicShape targets, 
     Shader import_shader, unsigned int floor_tex, unsigned int wall_tex, unsigned int target_tex);
 void drawSkybox(Shader skybox_shader, unsigned int cubemapTexture, unsigned int skyboxVAO);
+void drawHUD(Shader font_program, Font arialFont, std::chrono::_V2::system_clock::time_point start_time);
 
 //
 // GLOBAL VARIABLES
@@ -379,59 +380,41 @@ int main () {
             bullet.Draw(&import_shader);
         }
         
+        // Draws Skybox
         drawSkybox(skybox_shader, cubemapTexture, skyboxVAO);
-        
-        // skybox_shader.use();
-        // glm::mat4 skybox_view = glm::mat4(glm::mat3(curr_camera -> GetViewMatrix()));
-        // skybox_shader.setMat4("view", skybox_view);
-        // skybox_shader.setMat4("projection", project);
-
-        // glDepthFunc(GL_EQUAL);
-
-        // glBindVertexArray(skyboxVAO);
-        // glActiveTexture(0);
-        // skybox_shader.setInt("skybox", 0);
-        // glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-        // skybox_shader.setVec4("direction_light.ambient", glm::vec4(1.0, 0.0, 0.0, 1.0));
-        // glDrawArrays(GL_TRIANGLES, 0, 36);
-        // glBindVertexArray(0);
-        // glDepthFunc(GL_LESS);
 
         // HUD
-        //https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
-        char elapsed_time[6];
-        auto curr_time = std::chrono::system_clock::now();
-        if (!gameover){
-            
-            std::chrono::duration<double> time_passed = curr_time - start_time;
-            
-            snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
-        }
-        //char final_time[6];
-        if (target_locs.size() == 0){
-            gameover = true;
-        }
+        // I used https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
+        // to learn about the  functions to create a timer.
         
-        if (hud){
-
-            
-            arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
-            arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
+        drawHUD(font_program, arialFont, start_time);
+        // char elapsed_time[6];
+        // auto curr_time = std::chrono::system_clock::now();
+        // if (!gameover){
+        //     std::chrono::duration<double> time_passed = curr_time - start_time;
+        //     snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
+        // }
+        // if (target_locs.size() == 0){
+        //     gameover = true;
+        // }
         
+        // if (hud){
+        //     arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
+        //     arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
+        
+        //     char targets_remaining[3];
+        //     snprintf(targets_remaining, sizeof(targets_remaining), "%d" , target_locs.size());
+        //     arialFont.DrawText("Targets Remaining:", glm::vec2(-3, 2), font_program);
+        //     arialFont.DrawText(targets_remaining, glm::vec2(-0.5, 2), font_program);
 
-            char targets_remaining[3];
-            snprintf(targets_remaining, sizeof(targets_remaining), "%d" , target_locs.size());
-            arialFont.DrawText("Targets Remaining:", glm::vec2(-3, 2), font_program);
-            arialFont.DrawText(targets_remaining, glm::vec2(-0.5, 2), font_program);
-
-            if (nvg){
-                arialFont.DrawText("View: NVG", glm::vec2(-3, 1.5), font_program);
-            }
-            else{
-                arialFont.DrawText("View: Default", glm::vec2(-3, 1.5), font_program);
-            }
+        //     if (nvg){
+        //         arialFont.DrawText("View: NVG", glm::vec2(-3, 1.5), font_program);
+        //     }
+        //     else{
+        //         arialFont.DrawText("View: Default", glm::vec2(-3, 1.5), font_program);
+        //     }
             
-        }
+        // }
 
 
         glfwSwapBuffers(window);
@@ -640,4 +623,34 @@ void drawSkybox(Shader skybox_shader, unsigned int cubemapTexture, unsigned int 
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS);
+}
+
+void drawHUD(Shader font_program, Font arialFont, std::chrono::_V2::system_clock::time_point start_time){
+    char elapsed_time[6];
+    auto curr_time = std::chrono::system_clock::now();
+    if (!gameover){
+        std::chrono::duration<double> time_passed = curr_time - start_time;
+        snprintf(elapsed_time, sizeof(elapsed_time), "%f", time_passed);
+    }
+    if (target_locs.size() == 0){
+        gameover = true;
+    }
+    
+    if (hud){
+        arialFont.DrawText("Time:", glm::vec2(-3, 2.5), font_program);
+        arialFont.DrawText(elapsed_time, glm::vec2(-2, 2.5), font_program);
+    
+        char targets_remaining[3];
+        snprintf(targets_remaining, sizeof(targets_remaining), "%d" , target_locs.size());
+        arialFont.DrawText("Targets Remaining:", glm::vec2(-3, 2), font_program);
+        arialFont.DrawText(targets_remaining, glm::vec2(-0.5, 2), font_program);
+
+        if (nvg){
+            arialFont.DrawText("View: NVG", glm::vec2(-3, 1.5), font_program);
+        }
+        else{
+            arialFont.DrawText("View: Default", glm::vec2(-3, 1.5), font_program);
+        }
+        
+    }
 }
