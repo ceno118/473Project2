@@ -20,6 +20,7 @@
 //Processes user input (keyboard currently).
 //Receives a GLFWwindow pointer as input.
 void processInput(GLFWwindow *window, Player* player, Bullet bullet);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void checkPost(bool nvg, std::vector<Shader*> shaders, glm::vec4 dir_light_color);
 void checkBullet(bool shot_out, Bullet bullet);
 void checkCam(Player* player_pointer);
@@ -54,6 +55,7 @@ Camera  camera(glm::vec3(2.0,3.0,7.0),glm::vec3(0.0,1.0,0.0),0.0f,-25.0f);
 Camera  *curr_camera = &camera;
 
 // Window Variables
+bool first_mouse = true;
 int screen_width = 600;
 int screen_height = 600;
 double lastX = screen_width/2.0;
@@ -504,6 +506,22 @@ void processInput(GLFWwindow *window, Player* player, Bullet bullet)
     if(glfwGetKey(window, GLFW_KEY_F)==GLFW_RELEASE && light_pressed){
         light_pressed = false;
     }
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (first_mouse) {
+        first_mouse = false;
+        lastX = xpos;
+        lastY = ypos;
+    }
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    curr_camera->ProcessMouseMovement(xoffset,yoffset,true);
+
 }
 
 void checkPost(bool nvg, std::vector<Shader*> shaders, glm::vec4 dir_light_color){
