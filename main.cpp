@@ -315,27 +315,27 @@ int main () {
         
         // Checks if the bullet should be reset
         
-        checkBullet(shot_out, bullet);
+        //checkBullet(shot_out, bullet);
 
-        // if (!shot_out){
-        //     bullet.Reset();
-        // }
-        // glm::vec3 bullet_loc = bullet.GetLocation();
-        // if (bullet_loc.x > 10 || bullet_loc.z > 10 || bullet_loc.x < -10 || bullet_loc.z < -10){
-        //     bullet.Reset();
-        //     shot_out = false;
-        // }
-        // for (int i = 0; i<target_locs.size(); i++){
-        //     float t_x = target_locs[i].x;
-        //     float t_y = target_locs[i].y;
-        //     float t_z = target_locs[i].z;
+        if (!shot_out){
+            bullet.Reset();
+        }
+        glm::vec3 bullet_loc = bullet.GetLocation();
+        if (bullet_loc.x > 10 || bullet_loc.z > 10 || bullet_loc.x < -10 || bullet_loc.z < -10){
+            bullet.Reset();
+            shot_out = false;
+        }
+        for (int i = 0; i<target_locs.size(); i++){
+            float t_x = target_locs[i].x;
+            float t_y = target_locs[i].y;
+            float t_z = target_locs[i].z;
 
-        //     if (bullet_loc.x < t_x + 0.4 && bullet_loc.x > t_x - 0.4 && bullet_loc.z < t_z + 0.4 && bullet_loc.z > t_z - 0.4){
-        //         bullet.Reset();
-        //         shot_out = false;
-        //         target_locs.erase(target_locs.begin()+i);
-        //     }
-        // }      
+            if (bullet_loc.x < t_x + 0.4 && bullet_loc.x > t_x - 0.4 && bullet_loc.z < t_z + 0.4 && bullet_loc.z > t_z - 0.4){
+                bullet.Reset();
+                shot_out = false;
+                target_locs.erase(target_locs.begin()+i);
+            }
+        }      
 
         //set the clear color to  wipe the window
         glClearColor(0.0,0.0,0.0,1.0);
