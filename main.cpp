@@ -22,6 +22,7 @@
 void processInput(GLFWwindow *window, Player* player, Bullet bullet);
 void checkPost(bool nvg, std::vector<Shader*> shaders, glm::vec4 dir_light_color);
 void checkBullet(bool shot_out, Bullet bullet);
+void checkCam(Player* player_pointer);
 
 //
 // GLOBAL VARIABLES
@@ -314,9 +315,7 @@ int main () {
         checkPost(nvg, shaders, dir_light_color);
         
         // Checks if the bullet should be reset
-        
-        //checkBullet(shot_out, bullet);
-
+        //checkBullet(shot_out, bullet); I tried implementing this as a separate function but it stopped working when I did.
         if (!shot_out){
             bullet.Reset();
         }
@@ -337,29 +336,28 @@ int main () {
             }
         }      
 
-        //set the clear color to  wipe the window
+        //set the clear color to wipe the window and wipes it so we can start drawing to the screen
         glClearColor(0.0,0.0,0.0,1.0);
-
-        //clear the color buffer (where things are drawn) using the current clear color.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Sets camera type/position based on user input
-        if (top_cam){// top down on player
-            view = glm::lookAt((player_pointer->location + glm::vec3(0,20,0)), player_pointer->location, glm::vec3(0,0,-1));
-        }
-        else if (third_cam){// third person
-            glm::vec3 lookFrom = glm::vec3(-2*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 3.5, -2*(sin(glm::radians(-1*(player_pointer->angle_z)))));
-            glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2.8, (sin(glm::radians(-1*(player_pointer->angle_z)))));
-            view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
-        }
-        else if (first_cam){//first person
-            glm::vec3 lookFrom = glm::vec3(0, player_pointer->location.y + 2.3, 0);
-            glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2.3, (sin(glm::radians(-1*(player_pointer->angle_z)))));
-            view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
-        }
-        else {// catches any error where none of the camera bools are set
-            third_cam = true;
-        }
+        checkCam(player_pointer);
+        // if (top_cam){// top down on player
+        //     view = glm::lookAt((player_pointer->location + glm::vec3(0,20,0)), player_pointer->location, glm::vec3(0,0,-1));
+        // }
+        // else if (third_cam){// third person
+        //     glm::vec3 lookFrom = glm::vec3(-2*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 3.5, -2*(sin(glm::radians(-1*(player_pointer->angle_z)))));
+        //     glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2.8, (sin(glm::radians(-1*(player_pointer->angle_z)))));
+        //     view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
+        // }
+        // else if (first_cam){//first person
+        //     glm::vec3 lookFrom = glm::vec3(0, player_pointer->location.y + 2.3, 0);
+        //     glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2.3, (sin(glm::radians(-1*(player_pointer->angle_z)))));
+        //     view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
+        // }
+        // else {// catches any error where none of the camera bools are set
+        //     third_cam = true;
+        // }
         
         for (int i = 0; i < shaders.size(); i++) {
             shaders[i]->use();
@@ -591,4 +589,23 @@ void checkBullet(bool shot_out, Bullet bullet){
             target_locs.erase(target_locs.begin()+i);
         }
     }   
+}
+
+void checkCam(Player* player_pointer){
+    if (top_cam){// top down on player
+            view = glm::lookAt((player_pointer->location + glm::vec3(0,20,0)), player_pointer->location, glm::vec3(0,0,-1));
+        }
+    else if (third_cam){// third person
+            glm::vec3 lookFrom = glm::vec3(-2*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 3.5, -2*(sin(glm::radians(-1*(player_pointer->angle_z)))));
+            glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2.8, (sin(glm::radians(-1*(player_pointer->angle_z)))));
+            view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
+        }
+    else if (first_cam){//first person
+            glm::vec3 lookFrom = glm::vec3(0, player_pointer->location.y + 2.3, 0);
+            glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2.3, (sin(glm::radians(-1*(player_pointer->angle_z)))));
+            view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
+        }
+    else {// catches any error where none of the camera bools are set
+            third_cam = true;
+        }
 }
