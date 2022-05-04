@@ -20,6 +20,7 @@
 //Processes user input (keyboard currently).
 //Receives a GLFWwindow pointer as input.
 void processInput(GLFWwindow *window, Player* player, Bullet bullet);
+void checkPost(bool nvg, std::vector<Shader*> shaders, glm::vec4 dir_light_color);
 
 //
 // GLOBAL VARIABLES
@@ -309,22 +310,23 @@ int main () {
         processInput(window, &player, bullet);
 
         // Checks for post-processing boolean
-        if (nvg){
-           for (int i = 0; i < shaders.size(); i++){
-                shaders[i]->use();
-                shaders[i]->setBool("use_nvg", true);
-                shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
-                shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
-           }
-        }
-        else{
-            for (int i = 0; i < shaders.size(); i++){
-                shaders[i]->use();
-                shaders[i]->setBool("use_nvg", false);
-                shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
-                shaders[i]->setVec4("ambient", dir_light_color);
-            }
-        }
+        checkPost(nvg, shaders, dir_light_color);
+        // if (nvg){
+        //    for (int i = 0; i < shaders.size(); i++){
+        //         shaders[i]->use();
+        //         shaders[i]->setBool("use_nvg", true);
+        //         shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
+        //         shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
+        //    }
+        // }
+        // else{
+        //     for (int i = 0; i < shaders.size(); i++){
+        //         shaders[i]->use();
+        //         shaders[i]->setBool("use_nvg", false);
+        //         shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
+        //         shaders[i]->setVec4("ambient", dir_light_color);
+        //     }
+        // }
         
         // checks if the bullet should be reset
         if (!shot_out){
@@ -560,4 +562,23 @@ void processInput(GLFWwindow *window, Player* player, Bullet bullet)
     if(glfwGetKey(window, GLFW_KEY_F)==GLFW_RELEASE && light_pressed){
         light_pressed = false;
     }
+}
+
+void checkPost(bool nvg, std::vector<Shader*> shaders, glm::vec4 dir_light_color){
+    if (nvg){
+           for (int i = 0; i < shaders.size(); i++){
+                shaders[i]->use();
+                shaders[i]->setBool("use_nvg", true);
+                shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
+                shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
+           }
+        }
+        else{
+            for (int i = 0; i < shaders.size(); i++){
+                shaders[i]->use();
+                shaders[i]->setBool("use_nvg", false);
+                shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
+                shaders[i]->setVec4("ambient", dir_light_color);
+            }
+        }
 }
