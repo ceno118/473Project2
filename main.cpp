@@ -110,7 +110,8 @@ int main () {
     glm::vec4 green_light_color = glm::vec4(0.0, 1.0, 0.0, 1.0);
 
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouse_callback);  
 
     //Blending....dealing with the alpha channel for transparency.
     glEnable(GL_BLEND);
