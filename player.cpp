@@ -18,9 +18,9 @@ void Player::Rotate(float angle_change){
     this -> angle_z += angle_change;
 }
 
-void Player::Move(){
-    this -> location.x += 0.002*(cos(glm::radians(-1*(this -> angle_z))));
-    this -> location.z += 0.002*(sin(glm::radians(-1*(this -> angle_z))));
+void Player::Move(int dir){
+    this -> location.x += dir*0.002*(cos(glm::radians(-1*(this -> angle_z))));
+    this -> location.z += dir*0.002*(sin(glm::radians(-1*(this -> angle_z))));
 }
 
 void Player::Draw(Shader shader, bool nvg){
@@ -46,13 +46,16 @@ void Player::Draw(Shader shader, bool nvg){
 
 void Player::process_input(GLFWwindow* window, bool top_cam){
     if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !top_cam){
-        this -> Move();
+        this -> Move(1);
     }
     if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS){
         this -> Rotate(0.1);
     }
     if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS){
         this -> Rotate(-0.1);
+    }
+    if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !top_cam){
+        this -> Move(-1);
     }
     
 }

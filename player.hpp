@@ -25,7 +25,7 @@ class Player {
 
         void Rotate(float angle_change);
 
-        void Move();
+        void Move(int dir);
         
         void Draw(Shader shader, bool nvg);
 
