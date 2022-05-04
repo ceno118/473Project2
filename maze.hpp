@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "import_object.hpp"
 
+// Unused class that I wanted to use to load and draw the maze but it didn't work.
 class Maze {
     protected:
         // std::vector<VAOStruct> vaos;

@@ -311,7 +311,6 @@ int main () {
 
     //The render loop -- the function in the condition checks if the 
     //  window has been set to close (does this each iteration)
-    std::cout << "gets to render" << std::endl;
     while (!glfwWindowShouldClose(window)) {
         
         // Checks for user input for player movement, shooting,

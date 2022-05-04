@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+// Unused class that I wanted to use to load and draw the maze but it didn't work.
+
 Maze::Maze(BasicShape walls, BasicShape floor, BasicShape targets,
             unsigned int walls_texture, unsigned int floor_texture, unsigned int target_texture){
     this -> walls = walls;
