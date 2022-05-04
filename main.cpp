@@ -21,6 +21,7 @@
 //Receives a GLFWwindow pointer as input.
 void processInput(GLFWwindow *window, Player* player, Bullet bullet);
 void checkPost(bool nvg, std::vector<Shader*> shaders, glm::vec4 dir_light_color);
+void checkBullet(bool shot_out, Bullet bullet, std::vector<glm::vec3> target_locs);
 
 //
 // GLOBAL VARIABLES
@@ -311,43 +312,30 @@ int main () {
 
         // Checks for post-processing boolean
         checkPost(nvg, shaders, dir_light_color);
-        // if (nvg){
-        //    for (int i = 0; i < shaders.size(); i++){
-        //         shaders[i]->use();
-        //         shaders[i]->setBool("use_nvg", true);
-        //         shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
-        //         shaders[i]->setVec4("ambient", 0.8f*dir_light_color);
-        //    }
-        // }
-        // else{
-        //     for (int i = 0; i < shaders.size(); i++){
-        //         shaders[i]->use();
-        //         shaders[i]->setBool("use_nvg", false);
-        //         shaders[i]->setVec4("direction_light.ambient",0.2f*dir_light_color);
-        //         shaders[i]->setVec4("ambient", dir_light_color);
-        //     }
-        // }
         
-        // checks if the bullet should be reset
-        if (!shot_out){
-            bullet.Reset();
-        }
-        glm::vec3 bullet_loc = bullet.GetLocation();
-        if (bullet_loc.x > 10 || bullet_loc.z > 10 || bullet_loc.x < -10 || bullet_loc.z < -10){
-            bullet.Reset();
-            shot_out = false;
-        }
-        for (int i = 0; i<target_locs.size(); i++){
-            float t_x = target_locs[i].x;
-            float t_y = target_locs[i].y;
-            float t_z = target_locs[i].z;
+        // Checks if the bullet should be reset
+        
+        checkBullet(shot_out, bullet, target_locs);
 
-            if (bullet_loc.x < t_x + 0.4 && bullet_loc.x > t_x - 0.4 && bullet_loc.z < t_z + 0.4 && bullet_loc.z > t_z - 0.4){
-                bullet.Reset();
-                shot_out = false;
-                target_locs.erase(target_locs.begin()+i);
-            }
-        }      
+        // if (!shot_out){
+        //     bullet.Reset();
+        // }
+        // glm::vec3 bullet_loc = bullet.GetLocation();
+        // if (bullet_loc.x > 10 || bullet_loc.z > 10 || bullet_loc.x < -10 || bullet_loc.z < -10){
+        //     bullet.Reset();
+        //     shot_out = false;
+        // }
+        // for (int i = 0; i<target_locs.size(); i++){
+        //     float t_x = target_locs[i].x;
+        //     float t_y = target_locs[i].y;
+        //     float t_z = target_locs[i].z;
+
+        //     if (bullet_loc.x < t_x + 0.4 && bullet_loc.x > t_x - 0.4 && bullet_loc.z < t_z + 0.4 && bullet_loc.z > t_z - 0.4){
+        //         bullet.Reset();
+        //         shot_out = false;
+        //         target_locs.erase(target_locs.begin()+i);
+        //     }
+        // }      
 
         //set the clear color to  wipe the window
         glClearColor(0.0,0.0,0.0,1.0);
@@ -581,4 +569,26 @@ void checkPost(bool nvg, std::vector<Shader*> shaders, glm::vec4 dir_light_color
                 shaders[i]->setVec4("ambient", dir_light_color);
             }
         }
+}
+
+void checkBullet(bool shot_out, Bullet bullet, std::vector<glm::vec3> target_locs){
+    if (!shot_out){
+        bullet.Reset();
+    }
+    glm::vec3 bullet_loc = bullet.GetLocation();
+    if (bullet_loc.x > 10 || bullet_loc.z > 10 || bullet_loc.x < -10 || bullet_loc.z < -10){
+        bullet.Reset();
+        shot_out = false;
+    }
+    for (int i = 0; i<target_locs.size(); i++){
+        float t_x = target_locs[i].x;
+        float t_y = target_locs[i].y;
+        float t_z = target_locs[i].z;
+
+        if (bullet_loc.x < t_x + 0.4 && bullet_loc.x > t_x - 0.4 && bullet_loc.z < t_z + 0.4 && bullet_loc.z > t_z - 0.4){
+            bullet.Reset();
+            shot_out = false;
+            target_locs.erase(target_locs.begin()+i);
+        }
+    }   
 }
