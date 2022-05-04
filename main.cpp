@@ -23,6 +23,8 @@ void processInput(GLFWwindow *window, Player* player, Bullet bullet);
 void checkPost(bool nvg, std::vector<Shader*> shaders, glm::vec4 dir_light_color);
 void checkBullet(bool shot_out, Bullet bullet);
 void checkCam(Player* player_pointer);
+void mazeDraw(BasicShape floor, BasicShape walls, BasicShape targets, 
+    Shader import_shader, unsigned int floor_tex, unsigned int wall_tex, unsigned int target_tex);
 
 //
 // GLOBAL VARIABLES
@@ -342,23 +344,8 @@ int main () {
 
         // Sets camera type/position based on user input
         checkCam(player_pointer);
-        // if (top_cam){// top down on player
-        //     view = glm::lookAt((player_pointer->location + glm::vec3(0,20,0)), player_pointer->location, glm::vec3(0,0,-1));
-        // }
-        // else if (third_cam){// third person
-        //     glm::vec3 lookFrom = glm::vec3(-2*(cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 3.5, -2*(sin(glm::radians(-1*(player_pointer->angle_z)))));
-        //     glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2.8, (sin(glm::radians(-1*(player_pointer->angle_z)))));
-        //     view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
-        // }
-        // else if (first_cam){//first person
-        //     glm::vec3 lookFrom = glm::vec3(0, player_pointer->location.y + 2.3, 0);
-        //     glm::vec3 lookTo = glm::vec3((cos(glm::radians(-1*(player_pointer->angle_z)))), player_pointer->location.y + 2.3, (sin(glm::radians(-1*(player_pointer->angle_z)))));
-        //     view = glm::lookAt(player_pointer->location + lookFrom, player_pointer->location + lookTo, glm::vec3(0,1,0));
-        // }
-        // else {// catches any error where none of the camera bools are set
-        //     third_cam = true;
-        // }
         
+        // Sets view and light position
         for (int i = 0; i < shaders.size(); i++) {
             shaders[i]->use();
             shaders[i]->setMat4("view",view);
@@ -375,41 +362,43 @@ int main () {
 
         //Draws the maze
 
-        import_shader.use();
-        import_shader.setMat4("transform", glm::mat4(1.0));
-        glm::mat4 floor_model = glm::mat4(1.0);
-        floor_model = glm::rotate(floor_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
-        floor_model = glm::translate(floor_model, glm::vec3(0.0));
-        floor_model = glm::scale(floor_model, glm::vec3(1.5));
-        import_shader.setMat4("model", floor_model);
-        import_shader.setBool("use_texture", true);
-        glBindTexture(GL_TEXTURE_2D, floor_tex);
-        import_shader.setMat4("transform", glm::mat4(1.0f));
-        floor.Draw();
+        mazeDraw(floor, walls, targets, import_shader, floor_tex, wall_tex, target_tex);
 
-        import_shader.use();
-        import_shader.setMat4("transform", glm::mat4(1.0));
-        glm::mat4 walls_model = glm::mat4(1.0);
-        walls_model = glm::rotate(walls_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
-        walls_model = glm::translate(walls_model, glm::vec3(0.0));
-        walls_model = glm::scale(walls_model, glm::vec3(1.5));
-        import_shader.setMat4("model", walls_model);
-        import_shader.setBool("use_texture", true);
-        glBindTexture(GL_TEXTURE_2D, wall_tex);
-        import_shader.setMat4("transform", glm::mat4(1.0f));
-        walls.Draw();
+        // import_shader.use();
+        // import_shader.setMat4("transform", glm::mat4(1.0));
+        // glm::mat4 floor_model = glm::mat4(1.0);
+        // floor_model = glm::rotate(floor_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
+        // floor_model = glm::translate(floor_model, glm::vec3(0.0));
+        // floor_model = glm::scale(floor_model, glm::vec3(1.5));
+        // import_shader.setMat4("model", floor_model);
+        // import_shader.setBool("use_texture", true);
+        // glBindTexture(GL_TEXTURE_2D, floor_tex);
+        // import_shader.setMat4("transform", glm::mat4(1.0f));
+        // floor.Draw();
+
+        // import_shader.use();
+        // import_shader.setMat4("transform", glm::mat4(1.0));
+        // glm::mat4 walls_model = glm::mat4(1.0);
+        // walls_model = glm::rotate(walls_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
+        // walls_model = glm::translate(walls_model, glm::vec3(0.0));
+        // walls_model = glm::scale(walls_model, glm::vec3(1.5));
+        // import_shader.setMat4("model", walls_model);
+        // import_shader.setBool("use_texture", true);
+        // glBindTexture(GL_TEXTURE_2D, wall_tex);
+        // import_shader.setMat4("transform", glm::mat4(1.0f));
+        // walls.Draw();
         
-        import_shader.use();
-        import_shader.setMat4("transform", glm::mat4(1.0));
-        glm::mat4 targets_model = glm::mat4(1.0);
-        targets_model = glm::rotate(targets_model,glm::radians(0.0f),glm::vec3(0.0,1.0,0.0));
-        targets_model = glm::translate(targets_model, glm::vec3(0.0));
-        targets_model = glm::scale(targets_model, glm::vec3(1.5));
-        import_shader.setMat4("model", targets_model);
-        import_shader.setBool("use_texture", true);
-        glBindTexture(GL_TEXTURE_2D, target_tex);
-        import_shader.setMat4("transform", glm::mat4(1.0f));
-        targets.Draw();
+        // import_shader.use();
+        // import_shader.setMat4("transform", glm::mat4(1.0));
+        // glm::mat4 targets_model = glm::mat4(1.0);
+        // targets_model = glm::rotate(targets_model,glm::radians(0.0f),glm::vec3(0.0,1.0,0.0));
+        // targets_model = glm::translate(targets_model, glm::vec3(0.0));
+        // targets_model = glm::scale(targets_model, glm::vec3(1.5));
+        // import_shader.setMat4("model", targets_model);
+        // import_shader.setBool("use_texture", true);
+        // glBindTexture(GL_TEXTURE_2D, target_tex);
+        // import_shader.setMat4("transform", glm::mat4(1.0f));
+        // targets.Draw();
         
         // Draws the player
         import_shader.use();
@@ -609,3 +598,42 @@ void checkCam(Player* player_pointer){
             third_cam = true;
         }
 }
+
+void mazeDraw(BasicShape floor, BasicShape walls, BasicShape targets, 
+    Shader import_shader, unsigned int floor_tex, unsigned int wall_tex, unsigned int target_tex){
+        import_shader.use();
+        import_shader.setMat4("transform", glm::mat4(1.0));
+        glm::mat4 floor_model = glm::mat4(1.0);
+        floor_model = glm::rotate(floor_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
+        floor_model = glm::translate(floor_model, glm::vec3(0.0));
+        floor_model = glm::scale(floor_model, glm::vec3(1.5));
+        import_shader.setMat4("model", floor_model);
+        import_shader.setBool("use_texture", true);
+        glBindTexture(GL_TEXTURE_2D, floor_tex);
+        import_shader.setMat4("transform", glm::mat4(1.0f));
+        floor.Draw();
+
+        import_shader.use();
+        import_shader.setMat4("transform", glm::mat4(1.0));
+        glm::mat4 walls_model = glm::mat4(1.0);
+        walls_model = glm::rotate(walls_model,glm::radians(0.0f),glm::vec3(1.0,0.0,0.0));
+        walls_model = glm::translate(walls_model, glm::vec3(0.0));
+        walls_model = glm::scale(walls_model, glm::vec3(1.5));
+        import_shader.setMat4("model", walls_model);
+        import_shader.setBool("use_texture", true);
+        glBindTexture(GL_TEXTURE_2D, wall_tex);
+        import_shader.setMat4("transform", glm::mat4(1.0f));
+        walls.Draw();
+        
+        import_shader.use();
+        import_shader.setMat4("transform", glm::mat4(1.0));
+        glm::mat4 targets_model = glm::mat4(1.0);
+        targets_model = glm::rotate(targets_model,glm::radians(0.0f),glm::vec3(0.0,1.0,0.0));
+        targets_model = glm::translate(targets_model, glm::vec3(0.0));
+        targets_model = glm::scale(targets_model, glm::vec3(1.5));
+        import_shader.setMat4("model", targets_model);
+        import_shader.setBool("use_texture", true);
+        glBindTexture(GL_TEXTURE_2D, target_tex);
+        import_shader.setMat4("transform", glm::mat4(1.0f));
+        targets.Draw();
+    }
