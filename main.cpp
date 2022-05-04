@@ -443,12 +443,12 @@ int main () {
             char x[5];
             char y[5];
             char z[5];
-            snprintf(x, sizeof(p_x), "%f", p_x);
-            snprintf(y, sizeof(p_y), "%f", p_y);
-            snprintf(z, sizeof(p_z), "%f", p_z);
+            snprintf(x, sizeof(x), "%f", p_x);
+            snprintf(y, sizeof(y), "%f", p_y);
+            snprintf(z, sizeof(z), "%f", p_z);
             arialFont.DrawText(x, glm::vec2(-3, 1), font_program);
             arialFont.DrawText(y, glm::vec2(-3, 0.5), font_program);
-            arialFont.DrawText(y, glm::vec2(-3, 0), font_program);
+            arialFont.DrawText(z, glm::vec2(-3, 0), font_program);
         }
 
 
