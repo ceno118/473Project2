@@ -420,7 +420,7 @@ int main () {
         
         // Draws the player
         import_shader.use();
-        import_shader.setVec4("direction_light.ambient", glm::vec4(0.0, 0.0, 1.0, 1.0));
+        //import_shader.setVec4("direction_light.ambient", glm::vec4(0.0, 0.0, 1.0, 1.0));
         player.Draw(import_shader, nvg);
         
         // Draws the bullet and updates its position
